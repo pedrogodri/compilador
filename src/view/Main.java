@@ -34,6 +34,7 @@ public class Main extends JFrame {
         JTextArea mensagensArea;
         File arquivoAtual;
         int fontSize;
+        boolean alterado = false; // NOVO: indica se houve alteração
 
         EditorTab(int fontSize) {
             this.fontSize = fontSize;
@@ -214,26 +215,77 @@ public class Main extends JFrame {
     }
 
     private void acaoAbrir() {
-        EditorTab editor = getEditorAtual();
         JFileChooser chooser = new JFileChooser();
         chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Arquivos de texto (*.txt)", "txt"));
 
         if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            editor.arquivoAtual = chooser.getSelectedFile();
-            try (BufferedReader reader = new BufferedReader(new FileReader(editor.arquivoAtual))) {
-                editor.textArea.setText("");
-                editor.textArea.setText(reader.lines().reduce("", (a, b) -> a + (a.isEmpty() ? "" : "\n") + b));
-                editor.mensagensArea.setText("");
-                statusBar.setText(editor.arquivoAtual.getAbsolutePath());
-                SwingUtilities.invokeLater(() -> {
-                    atualizarNumerosLinhas();
-                });
-                // Troca o nome da aba
-                int idx = tabbedPane.getSelectedIndex();
-                tabbedPane.setTitleAt(idx, editor.arquivoAtual.getName());
+            File arquivo = chooser.getSelectedFile();
+            EditorTab editor = new EditorTab(fontSize);
+
+            // Carrega o conteúdo do arquivo
+            try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
+                StringBuilder sb = new StringBuilder();
+                String linha;
+                while ((linha = reader.readLine()) != null) {
+                    sb.append(linha).append("\n");
+                }
+                editor.textArea.setText(sb.toString());
+                editor.arquivoAtual = arquivo; // IMPORTANTE!
+                editor.alterado = false;
             } catch (IOException ex) {
                 mostrarMensagem("Erro ao abrir o arquivo: " + ex.getMessage());
             }
+
+            final JSplitPane[] splitPaneRef = new JSplitPane[1];
+
+            JScrollPane scrollEditor = new JScrollPane(
+                    editor.textArea,
+                    JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                    JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+            scrollEditor.setRowHeaderView(editor.lineNumbers);
+
+            editor.textArea.getDocument().addDocumentListener(new DocumentListener() {
+                public void changedUpdate(DocumentEvent e) { updateLineNumbers(); }
+                public void removeUpdate(DocumentEvent e) { updateLineNumbers(); }
+                public void insertUpdate(DocumentEvent e) { updateLineNumbers(); }
+                private void updateLineNumbers() {
+                    int totalLinhas = editor.textArea.getLineCount();
+                    StringBuilder numeros = new StringBuilder();
+                    for (int i = 1; i <= totalLinhas; i++) {
+                        numeros.append(i).append("\n");
+                    }
+                    editor.lineNumbers.setText(numeros.toString());
+                    if (!editor.alterado) {
+                        editor.alterado = true;
+                        if (splitPaneRef[0] != null) {
+                            atualizarTituloAba(splitPaneRef[0]);
+                        }
+                    }
+                }
+            });
+
+            JScrollPane scrollMensagens = new JScrollPane(
+                    editor.mensagensArea,
+                    JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                    JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+            JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, scrollEditor, scrollMensagens);
+            splitPane.setDividerLocation(500);
+            splitPane.setOneTouchExpandable(true);
+
+            splitPane.putClientProperty("editorTab", editor);
+
+            splitPaneRef[0] = splitPane;
+
+            tabbedPane.addTab(arquivo.getName(), splitPane);
+            int idx = tabbedPane.indexOfComponent(splitPane);
+            tabbedPane.setTabComponentAt(idx, criarComponenteAba(arquivo.getName(), splitPane));
+            tabbedPane.setSelectedComponent(splitPane);
+
+            statusBar.setText(arquivo.getAbsolutePath());
+            SwingUtilities.invokeLater(() -> {
+                atualizarNumerosLinhas();
+            });
         }
     }
 
@@ -271,6 +323,10 @@ public class Main extends JFrame {
                 editor.textArea.write(writer);
                 editor.mensagensArea.setText("");
                 statusBar.setText(editor.arquivoAtual.getAbsolutePath());
+                editor.alterado = false; // MARCA COMO NÃO ALTERADO APÓS SALVAR
+                // Atualiza o título da aba para remover o *
+                JSplitPane split = (JSplitPane) tabbedPane.getSelectedComponent();
+                atualizarTituloAba(split);
             }
         } catch (IOException ex) {
             mostrarMensagem("Erro ao salvar o arquivo: " + ex.getMessage());
@@ -326,6 +382,8 @@ public class Main extends JFrame {
     private void adicionarNovaAba() {
         EditorTab editor = new EditorTab(fontSize);
 
+        final JSplitPane[] splitPaneRef = new JSplitPane[1];
+
         JScrollPane scrollEditor = new JScrollPane(
                 editor.textArea,
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
@@ -343,6 +401,12 @@ public class Main extends JFrame {
                     numeros.append(i).append("\n");
                 }
                 editor.lineNumbers.setText(numeros.toString());
+                if (!editor.alterado) {
+                    editor.alterado = true;
+                    if (splitPaneRef[0] != null) {
+                        atualizarTituloAba(splitPaneRef[0]);
+                    }
+                }
             }
         });
 
@@ -356,6 +420,8 @@ public class Main extends JFrame {
         splitPane.setOneTouchExpandable(true);
 
         splitPane.putClientProperty("editorTab", editor);
+
+        splitPaneRef[0] = splitPane;
 
         tabbedPane.addTab("Novo", splitPane);
         int idx = tabbedPane.indexOfComponent(splitPane);
@@ -381,21 +447,34 @@ public class Main extends JFrame {
         btnFechar.addActionListener(e -> {
             int idx = tabbedPane.indexOfComponent(componente);
             if (idx != -1) {
+                EditorTab editor = (EditorTab) ((JSplitPane) componente).getClientProperty("editorTab");
+                if (editor.alterado) {
+                    String[] opcoes = {"Sim", "Não", "Cancelar"};
+                    int opt = JOptionPane.showOptionDialog(
+                        this,
+                        "O arquivo foi alterado. Deseja salvar antes de fechar?",
+                        "Salvar alterações",
+                        JOptionPane.YES_NO_CANCEL_OPTION,
+                        JOptionPane.WARNING_MESSAGE,
+                        null,
+                        opcoes,
+                        opcoes[0]
+                    );
+                    if (opt == 2 || opt == JOptionPane.CLOSED_OPTION) {
+                        return; // Não fecha
+                    }
+                    if (opt == 0) { // Sim
+                        tabbedPane.setSelectedIndex(idx); // Garante que está na aba certa
+                        acaoSalvar();
+                        if (editor.alterado) return;
+                    }
+                    // Se Não (opt == 1), apenas fecha
+                }
                 tabbedPane.remove(idx);
             }
         });
 
         pnl.add(btnFechar);
-
-        // Atualiza o nome da aba quando o arquivo for salvo/aberto
-        tabbedPane.addChangeListener(e -> {
-            int idx = tabbedPane.indexOfComponent(componente);
-            if (idx != -1) {
-                EditorTab editor = (EditorTab) ((JSplitPane) componente).getClientProperty("editorTab");
-                String nome = (editor.arquivoAtual != null) ? editor.arquivoAtual.getName() : "Novo";
-                lblTitulo.setText(nome + "  ");
-            }
-        });
 
         return pnl;
     }
@@ -403,6 +482,25 @@ public class Main extends JFrame {
     private EditorTab getEditorAtual() {
         JSplitPane split = (JSplitPane) tabbedPane.getSelectedComponent();
         return (EditorTab) split.getClientProperty("editorTab");
+    }
+
+    // Atualiza o título da aba, adicionando/removendo o * conforme o estado de alteração
+    private void atualizarTituloAba(JSplitPane splitPane) {
+        EditorTab editor = (EditorTab) splitPane.getClientProperty("editorTab");
+        int idx = tabbedPane.indexOfComponent(splitPane);
+        if (idx != -1) {
+            String nome = (editor.arquivoAtual != null) ? editor.arquivoAtual.getName() : "Novo";
+            if (editor.alterado) nome = "*" + nome;
+            // Atualiza o label do componente da aba
+            Component tabComponent = tabbedPane.getTabComponentAt(idx);
+            if (tabComponent instanceof JPanel) {
+                for (Component c : ((JPanel) tabComponent).getComponents()) {
+                    if (c instanceof JLabel) {
+                        ((JLabel) c).setText(nome + "  ");
+                    }
+                }
+            }
+        }
     }
 
     public static void main(String[] args) {
