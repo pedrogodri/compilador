@@ -15,7 +15,18 @@ public class Main extends JFrame {
     private boolean darkMode = false;
 
     private JTabbedPane tabbedPane;
-    private JLabel statusBar; // <-- Adicione esta linha
+    private JLabel statusBar;
+    
+    // Declare os botões como campos da classe para o WindowBuilder reconhecer
+    private JButton btnNovo;
+    private JButton btnAbrir;
+    private JButton btnSalvar;
+    private JButton btnCopiar;
+    private JButton btnColar;
+    private JButton btnRecortar;
+    private JButton btnCompilar;
+    private JButton btnEquipe;
+    private JToolBar toolBar;
 
     private class EditorTab {
         JTextArea textArea;
@@ -41,6 +52,16 @@ public class Main extends JFrame {
     }
 
     public Main() {
+        initializeComponents();
+        setupEventListeners();
+        setupKeyboardShortcuts();
+        adicionarNovaAba(); // Cria a primeira aba ao iniciar
+    }
+    
+    /**
+     * Inicializa os componentes da interface - método compatível com WindowBuilder
+     */
+    private void initializeComponents() {
         setTitle("Compilador");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1500, 800);
@@ -50,47 +71,61 @@ public class Main extends JFrame {
         JPanel contentPane = new JPanel(new BorderLayout());
         setContentPane(contentPane);
 
-        JToolBar toolBar = new JToolBar();
+        // Criar toolbar
+        toolBar = new JToolBar();
         toolBar.setFloatable(false);
         toolBar.setPreferredSize(new Dimension(getWidth(), 70));
-
-        JButton btnNovo = criarBotao("Novo [Ctrl+N]", "icons/novo.png");
-        JButton btnAbrir = criarBotao("Abrir [Ctrl+O]", "icons/abrir.png");
-        JButton btnSalvar = criarBotao("Salvar [Ctrl+S]", "icons/salvar.png");
-        JButton btnCopiar = criarBotao("Copiar [Ctrl+C]", "icons/copiar.png");
-        JButton btnColar = criarBotao("Colar [Ctrl+V]", "icons/colar.png");
-        JButton btnRecortar = criarBotao("Recortar [Ctrl+X]", "icons/recortar.png");
-        JButton btnCompilar = criarBotao("Compilar [F7]", "icons/compilar.png");
-        JButton btnEquipe = criarBotao("Equipe [F1]", "icons/equipe.png");
-
-        Dimension tamanhoBotao = new Dimension(160, 50);
-        for (JButton b : new JButton[] { btnNovo, btnAbrir, btnSalvar, btnCopiar, btnColar, btnRecortar, btnCompilar,
-                btnEquipe }) {
-            b.setPreferredSize(tamanhoBotao);
-            toolBar.add(b);
-        }
-
         contentPane.add(toolBar, BorderLayout.NORTH);
 
+        // Criar botões
+        btnNovo = new JButton("Novo [Ctrl+N]");
+        btnNovo.setPreferredSize(new Dimension(160, 50));
+        toolBar.add(btnNovo);
+
+        btnAbrir = new JButton("Abrir [Ctrl+O]");
+        btnAbrir.setPreferredSize(new Dimension(160, 50));
+        toolBar.add(btnAbrir);
+
+        btnSalvar = new JButton("Salvar [Ctrl+S]");
+        btnSalvar.setPreferredSize(new Dimension(160, 50));
+        toolBar.add(btnSalvar);
+
+        btnCopiar = new JButton("Copiar [Ctrl+C]");
+        btnCopiar.setPreferredSize(new Dimension(160, 50));
+        toolBar.add(btnCopiar);
+
+        btnColar = new JButton("Colar [Ctrl+V]");
+        btnColar.setPreferredSize(new Dimension(160, 50));
+        toolBar.add(btnColar);
+
+        btnRecortar = new JButton("Recortar [Ctrl+X]");
+        btnRecortar.setPreferredSize(new Dimension(160, 50));
+        toolBar.add(btnRecortar);
+
+        btnCompilar = new JButton("Compilar [F7]");
+        btnCompilar.setPreferredSize(new Dimension(160, 50));
+        toolBar.add(btnCompilar);
+
+        btnEquipe = new JButton("Equipe [F1]");
+        btnEquipe.setPreferredSize(new Dimension(160, 50));
+        toolBar.add(btnEquipe);
+
+        // Criar TabbedPane
         tabbedPane = new JTabbedPane();
         contentPane.add(tabbedPane, BorderLayout.CENTER);
 
-        adicionarNovaAba(); // Cria a primeira aba ao iniciar
-
-        statusBar = new JLabel(); // <-- Remova a declaração local, use o atributo
+        // Criar status bar
+        statusBar = new JLabel();
         statusBar.setBorder(BorderFactory.createEtchedBorder());
         statusBar.setPreferredSize(new Dimension(getWidth(), 25));
         contentPane.add(statusBar, BorderLayout.SOUTH);
-
-        tabbedPane.addChangeListener(e -> {
-            EditorTab editor = getEditorAtual();
-            if (editor.arquivoAtual != null) {
-                statusBar.setText(editor.arquivoAtual.getAbsolutePath());
-            } else {
-                statusBar.setText("");
-            }
-        });
-
+    }
+    
+    /**
+     * Configura os event listeners
+     */
+    private void setupEventListeners() {
+        // Event listeners dos botões
         btnNovo.addActionListener(e -> acaoNovo());
         btnAbrir.addActionListener(e -> acaoAbrir());
         btnSalvar.addActionListener(e -> acaoSalvar());
@@ -100,6 +135,23 @@ public class Main extends JFrame {
         btnCompilar.addActionListener(e -> mostrarMensagem("Compilação de programas ainda não foi implementada."));
         btnEquipe.addActionListener(e -> mostrarMensagem("Equipe: Pedro Godri, Yasmin, Gabriel."));
 
+        // Listener para mudança de aba
+        tabbedPane.addChangeListener(e -> {
+            if (tabbedPane.getSelectedComponent() != null) {
+                EditorTab editor = getEditorAtual();
+                if (editor.arquivoAtual != null) {
+                    statusBar.setText(editor.arquivoAtual.getAbsolutePath());
+                } else {
+                    statusBar.setText("");
+                }
+            }
+        });
+    }
+    
+    /**
+     * Configura os atalhos de teclado
+     */
+    private void setupKeyboardShortcuts() {
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK), "novo", this::acaoNovo);
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK), "abrir", this::acaoAbrir);
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK), "salvar", this::acaoSalvar);
@@ -121,13 +173,8 @@ public class Main extends JFrame {
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_DOWN_MASK), "zoomMenos",
                 this::diminuirZoom);
 
-        // Adicione um atalho para alternar o dark mode (Ctrl+D, por exemplo)
+        // Atalho para alternar dark mode
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK), "darkMode", this::alternarDarkMode);
-    }
-
-    private JButton criarBotao(String texto, String caminhoIcone) {
-        JButton botao = new JButton(texto);
-        return botao;
     }
 
     private void addAtalho(KeyStroke keyStroke, String nome, Runnable acao) {
@@ -140,7 +187,6 @@ public class Main extends JFrame {
         });
     }
 
-    // Atualize os métodos para usar o editor da aba atual:
     private void acaoNovo() {
         String[] opcoes = { "Nova Aba", "Substituir Aba Atual", "Cancelar" };
         int escolha = JOptionPane.showOptionDialog(
@@ -165,7 +211,6 @@ public class Main extends JFrame {
             int idx = tabbedPane.getSelectedIndex();
             tabbedPane.setTitleAt(idx, "Novo");
         }
-        // Se cancelar, não faz nada
     }
 
     private void acaoAbrir() {
@@ -288,18 +333,9 @@ public class Main extends JFrame {
         scrollEditor.setRowHeaderView(editor.lineNumbers);
 
         editor.textArea.getDocument().addDocumentListener(new DocumentListener() {
-            public void changedUpdate(DocumentEvent e) {
-                updateLineNumbers();
-            }
-
-            public void removeUpdate(DocumentEvent e) {
-                updateLineNumbers();
-            }
-
-            public void insertUpdate(DocumentEvent e) {
-                updateLineNumbers();
-            }
-
+            public void changedUpdate(DocumentEvent e) { updateLineNumbers(); }
+            public void removeUpdate(DocumentEvent e) { updateLineNumbers(); }
+            public void insertUpdate(DocumentEvent e) { updateLineNumbers(); }
             private void updateLineNumbers() {
                 int totalLinhas = editor.textArea.getLineCount();
                 StringBuilder numeros = new StringBuilder();
@@ -319,11 +355,49 @@ public class Main extends JFrame {
         splitPane.setDividerLocation(500);
         splitPane.setOneTouchExpandable(true);
 
-        // Associe o EditorTab ao splitPane
         splitPane.putClientProperty("editorTab", editor);
 
         tabbedPane.addTab("Novo", splitPane);
+        int idx = tabbedPane.indexOfComponent(splitPane);
+        tabbedPane.setTabComponentAt(idx, criarComponenteAba("Novo", splitPane));
         tabbedPane.setSelectedComponent(splitPane);
+    }
+
+    // Adicione este método na sua classe Main
+    private JPanel criarComponenteAba(String titulo, Component componente) {
+        JPanel pnl = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        pnl.setOpaque(false);
+
+        JLabel lblTitulo = new JLabel(titulo + "  ");
+        pnl.add(lblTitulo);
+
+        JButton btnFechar = new JButton("x");
+        btnFechar.setMargin(new Insets(0, 4, 0, 4));
+        btnFechar.setBorder(null);
+        btnFechar.setFocusable(false);
+        btnFechar.setContentAreaFilled(false);
+        btnFechar.setForeground(Color.RED);
+
+        btnFechar.addActionListener(e -> {
+            int idx = tabbedPane.indexOfComponent(componente);
+            if (idx != -1) {
+                tabbedPane.remove(idx);
+            }
+        });
+
+        pnl.add(btnFechar);
+
+        // Atualiza o nome da aba quando o arquivo for salvo/aberto
+        tabbedPane.addChangeListener(e -> {
+            int idx = tabbedPane.indexOfComponent(componente);
+            if (idx != -1) {
+                EditorTab editor = (EditorTab) ((JSplitPane) componente).getClientProperty("editorTab");
+                String nome = (editor.arquivoAtual != null) ? editor.arquivoAtual.getName() : "Novo";
+                lblTitulo.setText(nome + "  ");
+            }
+        });
+
+        return pnl;
     }
 
     private EditorTab getEditorAtual() {
