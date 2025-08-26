@@ -477,6 +477,20 @@ public class Main extends JFrame {
             }
         });
 
+        editor.textArea.addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                if ((e.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) != 0) {
+                    if (e.getWheelRotation() < 0) {
+                        aumentarZoom();
+                    } else if (e.getWheelRotation() > 0) {
+                        diminuirZoom();
+                    }
+                    e.consume();
+                }
+            }
+        });
+
         JScrollPane scrollMensagens = new JScrollPane(
                 editor.mensagensArea,
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
