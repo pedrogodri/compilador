@@ -353,7 +353,25 @@ public class Main extends JFrame {
             SwingUtilities.invokeLater(() -> {
                 atualizarNumerosLinhas();
             });
+
+            adicionarZoomScroll(editor.textArea);
         }
+    }
+
+    private void adicionarZoomScroll(JTextArea textArea) {
+        textArea.addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                if ((e.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) != 0) {
+                    if (e.getWheelRotation() < 0) {
+                        aumentarZoom();
+                    } else if (e.getWheelRotation() > 0) {
+                        diminuirZoom();
+                    }
+                    e.consume();
+                }
+            }
+        });
     }
 
     private void atualizarNumerosLinhas() {
@@ -477,19 +495,7 @@ public class Main extends JFrame {
             }
         });
 
-        editor.textArea.addMouseWheelListener(new MouseWheelListener() {
-            @Override
-            public void mouseWheelMoved(MouseWheelEvent e) {
-                if ((e.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) != 0) {
-                    if (e.getWheelRotation() < 0) {
-                        aumentarZoom();
-                    } else if (e.getWheelRotation() > 0) {
-                        diminuirZoom();
-                    }
-                    e.consume();
-                }
-            }
-        });
+        adicionarZoomScroll(editor.textArea);
 
         JScrollPane scrollMensagens = new JScrollPane(
                 editor.mensagensArea,
