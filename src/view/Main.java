@@ -53,6 +53,7 @@ public class Main extends JFrame {
     }
 
     public Main() {
+    	setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("/assets/icons/code.png")));
         initializeComponents();
         setupEventListeners();
         setupKeyboardShortcuts();
@@ -80,36 +81,94 @@ public class Main extends JFrame {
 
         // Criar botões
         btnNovo = new JButton("Novo [Ctrl+N]");
+        btnNovo.setIcon(new ImageIcon(Main.class.getResource("/assets/icons/new.png")));
         btnNovo.setPreferredSize(new Dimension(160, 50));
+        btnNovo.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnNovo.setVerticalTextPosition(SwingConstants.BOTTOM);
         toolBar.add(btnNovo);
 
         btnAbrir = new JButton("Abrir [Ctrl+O]");
+        btnAbrir.setIcon(new ImageIcon(Main.class.getResource("/assets/icons/open.png")));
         btnAbrir.setPreferredSize(new Dimension(160, 50));
+        btnAbrir.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnAbrir.setVerticalTextPosition(SwingConstants.BOTTOM);
         toolBar.add(btnAbrir);
 
         btnSalvar = new JButton("Salvar [Ctrl+S]");
+        btnSalvar.setIcon(new ImageIcon(Main.class.getResource("/assets/icons/save.png")));
         btnSalvar.setPreferredSize(new Dimension(160, 50));
+        btnSalvar.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnSalvar.setVerticalTextPosition(SwingConstants.BOTTOM);
         toolBar.add(btnSalvar);
 
         btnCopiar = new JButton("Copiar [Ctrl+C]");
+        btnCopiar.setIcon(new ImageIcon(Main.class.getResource("/assets/icons/copy.png")));
         btnCopiar.setPreferredSize(new Dimension(160, 50));
+        btnCopiar.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnCopiar.setVerticalTextPosition(SwingConstants.BOTTOM);
         toolBar.add(btnCopiar);
 
         btnColar = new JButton("Colar [Ctrl+V]");
+        btnColar.setIcon(new ImageIcon(Main.class.getResource("/assets/icons/paste.png")));
         btnColar.setPreferredSize(new Dimension(160, 50));
+        btnColar.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnColar.setVerticalTextPosition(SwingConstants.BOTTOM);
         toolBar.add(btnColar);
 
         btnRecortar = new JButton("Recortar [Ctrl+X]");
+        btnRecortar.setIcon(new ImageIcon(Main.class.getResource("/assets/icons/cutting.png")));
         btnRecortar.setPreferredSize(new Dimension(160, 50));
+        btnRecortar.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnRecortar.setVerticalTextPosition(SwingConstants.BOTTOM);
         toolBar.add(btnRecortar);
 
         btnCompilar = new JButton("Compilar [F7]");
+        btnCompilar.setIcon(new ImageIcon(Main.class.getResource("/assets/icons/play.png")));
         btnCompilar.setPreferredSize(new Dimension(160, 50));
+        btnCompilar.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnCompilar.setVerticalTextPosition(SwingConstants.BOTTOM);
         toolBar.add(btnCompilar);
 
         btnEquipe = new JButton("Equipe [F1]");
+        btnEquipe.setIcon(new ImageIcon(Main.class.getResource("/assets/icons/team.png")));
         btnEquipe.setPreferredSize(new Dimension(160, 50));
+        btnEquipe.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnEquipe.setVerticalTextPosition(SwingConstants.BOTTOM);
         toolBar.add(btnEquipe);
+
+        Dimension btnSize = new Dimension(110, 65);
+
+        btnNovo.setPreferredSize(btnSize);
+        btnNovo.setMinimumSize(btnSize);
+        btnNovo.setMaximumSize(btnSize);
+
+        btnAbrir.setPreferredSize(btnSize);
+        btnAbrir.setMinimumSize(btnSize);
+        btnAbrir.setMaximumSize(btnSize);
+
+        btnSalvar.setPreferredSize(btnSize);
+        btnSalvar.setMinimumSize(btnSize);
+        btnSalvar.setMaximumSize(btnSize);
+
+        btnCopiar.setPreferredSize(btnSize);
+        btnCopiar.setMinimumSize(btnSize);
+        btnCopiar.setMaximumSize(btnSize);
+
+        btnColar.setPreferredSize(btnSize);
+        btnColar.setMinimumSize(btnSize);
+        btnColar.setMaximumSize(btnSize);
+
+        btnRecortar.setPreferredSize(btnSize);
+        btnRecortar.setMinimumSize(btnSize);
+        btnRecortar.setMaximumSize(btnSize);
+
+        btnCompilar.setPreferredSize(btnSize);
+        btnCompilar.setMinimumSize(btnSize);
+        btnCompilar.setMaximumSize(btnSize);
+
+        btnEquipe.setPreferredSize(btnSize);
+        btnEquipe.setMinimumSize(btnSize);
+        btnEquipe.setMaximumSize(btnSize);
 
         // Criar TabbedPane
         tabbedPane = new JTabbedPane();
