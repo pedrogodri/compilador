@@ -208,9 +208,17 @@ public class Main extends JFrame {
             editor.mensagensArea.setText("");
             statusBar.setText("");
             editor.arquivoAtual = null;
-            // Atualiza o nome da aba para "Novo"
+            editor.alterado = false;
+            // Atualiza o nome da aba para "Novo" no componente customizado
             int idx = tabbedPane.getSelectedIndex();
-            tabbedPane.setTitleAt(idx, "Novo");
+            Component tabComponent = tabbedPane.getTabComponentAt(idx);
+            if (tabComponent instanceof JPanel) {
+                for (Component c : ((JPanel) tabComponent).getComponents()) {
+                    if (c instanceof JLabel) {
+                        ((JLabel) c).setText("Novo  ");
+                    }
+                }
+            }
         }
     }
 
