@@ -39,7 +39,6 @@ public class AppToolBar extends JToolBar {
         btnCompilar = createToolButton("Compilar [F7]", "/assets/icons/play.png", btnSize);
         btnEquipe = createToolButton("Equipe [F1]", "/assets/icons/team.png", btnSize);
         
-        // Adicionar botões à toolbar
         add(btnNovo);
         add(btnAbrir);
         add(btnSalvar);

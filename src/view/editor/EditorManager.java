@@ -335,7 +335,7 @@ public class EditorManager extends JPanel {
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0), "compilar",
                 () -> mostrarMensagem("Compilação de programas ainda não foi implementada."));
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), "equipe",
-                () -> mostrarMensagem("Equipe: Pedro Godri, Yasmin, Gabriel."));
+                () -> mostrarMensagem("Equipe: Gabriel Bugmann Vansuita, Pedro Henrique Godri, Yasmin Victória Alves de Souza."));
 
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, InputEvent.CTRL_DOWN_MASK), "zoomMais", this::aumentarZoom);
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, InputEvent.CTRL_DOWN_MASK), "zoomMais2",
