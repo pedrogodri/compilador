@@ -1,9 +1,9 @@
 package view;
 
+import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.*;
 
 public class EditorComNumerosDeLinha extends JPanel {
 
@@ -13,26 +13,21 @@ public class EditorComNumerosDeLinha extends JPanel {
     public EditorComNumerosDeLinha() {
         setLayout(new BorderLayout());
 
-        // Área principal de edição
         textArea = new JTextArea();
         textArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
 
-        // Força barras de rolagem sempre visíveis
         JScrollPane scrollPane = new JScrollPane(textArea,
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
-        // Área de numeração de linhas
         lineNumbers = new JTextArea("1");
         lineNumbers.setFont(new Font("Monospaced", Font.PLAIN, 14));
         lineNumbers.setEditable(false);
         lineNumbers.setBackground(Color.LIGHT_GRAY);
         lineNumbers.setForeground(Color.BLACK);
 
-        // Coloca a numeração na "row header" do JScrollPane
         scrollPane.setRowHeaderView(lineNumbers);
 
-        // Atualiza numeração quando o texto muda
         textArea.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) { updateLineNumbers(); }
             public void removeUpdate(DocumentEvent e) { updateLineNumbers(); }

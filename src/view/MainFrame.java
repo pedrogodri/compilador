@@ -1,11 +1,10 @@
 package view;
 
-import view.components.StatusBar;
-import view.components.AppToolBar;
-import view.editor.EditorManager;
-
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
+import view.components.AppToolBar;
+import view.components.StatusBar;
+import view.editor.EditorManager;
 
 public class MainFrame extends JFrame {
     private static final long serialVersionUID = 1L;
@@ -20,24 +19,23 @@ public class MainFrame extends JFrame {
         configureFrame();
     }
     
+    /**
+     * Cria o gerenciador de editor de abas, a toolbar,
+     * o layout do frame principal e cria a primeira aba automaticamente
+     */
     private void initializeComponents() {
-        // Criar gerenciador de editor com abas
         editorManager = new EditorManager();
         
-        // Criar toolbar com botões
         toolBar = new AppToolBar(editorManager);
         
-        // Criar barra de status
         statusBar = new StatusBar();
         editorManager.setStatusBar(statusBar);
         
-        // Layout do frame principal
         setLayout(new BorderLayout());
         add(toolBar, BorderLayout.NORTH);
         add(editorManager, BorderLayout.CENTER);
         add(statusBar, BorderLayout.SOUTH);
         
-        // Cria a primeira aba
         editorManager.adicionarNovaAba();
     }
     

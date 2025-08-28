@@ -1,10 +1,10 @@
 package view.editor;
 
+import java.awt.*;
+import java.io.File;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.*;
-import java.io.File;
 
 public class EditorTab {
     private JTextArea textArea;
@@ -19,19 +19,19 @@ public class EditorTab {
         initializeComponents();
     }
     
+    /**
+     * Configura as áreas de edição, numeração de linhas e mensagens
+     */
     private void initializeComponents() {
-        // Área principal de edição
         textArea = new JTextArea();
         textArea.setFont(new Font("Monospaced", Font.PLAIN, fontSize));
         
-        // Área de numeração de linhas
         lineNumbers = new JTextArea("1");
         lineNumbers.setFont(new Font("Monospaced", Font.PLAIN, fontSize));
         lineNumbers.setEditable(false);
         lineNumbers.setBackground(Color.LIGHT_GRAY);
         lineNumbers.setForeground(Color.BLACK);
         
-        // Área de mensagens
         mensagensArea = new JTextArea();
         mensagensArea.setEditable(false);
         mensagensArea.setBackground(new Color(240, 240, 240));
@@ -73,7 +73,6 @@ public class EditorTab {
                 String nome = (arquivoAtual != null) ? arquivoAtual.getName() : "Novo";
                 if (alterado) nome = "*" + nome;
                 
-                // Atualiza o label do componente da aba
                 Component tabComponent = tabbedPane.getTabComponentAt(idx);
                 if (tabComponent instanceof JPanel) {
                     for (Component c : ((JPanel) tabComponent).getComponents()) {
@@ -86,7 +85,6 @@ public class EditorTab {
         }
     }
 
-    // Getters e Setters
     public JTextArea getTextArea() {
         return textArea;
     }

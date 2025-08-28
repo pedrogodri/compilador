@@ -1,9 +1,8 @@
 package view.components;
 
-import view.editor.EditorManager;
-
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
+import view.editor.EditorManager;
 
 public class AppToolBar extends JToolBar {
     private static final long serialVersionUID = 1L;
@@ -84,7 +83,7 @@ public class AppToolBar extends JToolBar {
         });
         btnEquipe.addActionListener(e -> {
             JTextArea mensagensArea = ((EditorManager)editorManager).getClass().cast(editorManager).getEditorAtual().getMensagensArea();
-            mensagensArea.setText("Equipe: Pedro Godri, Yasmin, Gabriel.");
+            mensagensArea.setText("Equipe: Gabriel Bugmann Vansuita, Pedro Henrique Godri, Yasmin Victória Alves de Souza.");
         });
     }
 }

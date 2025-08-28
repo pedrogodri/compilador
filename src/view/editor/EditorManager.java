@@ -50,21 +50,27 @@ public class EditorManager extends JPanel {
         this.statusBar = statusBar;
     }
     
+    /**
+     * Configura o painel de edição e adiciona ao tabbedPane
+     */
     public void adicionarNovaAba() {
         EditorTab editor = new EditorTab(fontSize);
         
-        // Configurar o painel de edição
         JSplitPane splitPane = criarPainelEdicao(editor);
         
-        // Adicionar ao tabbedPane
         tabbedPane.addTab("Novo", splitPane);
         int idx = tabbedPane.indexOfComponent(splitPane);
         tabbedPane.setTabComponentAt(idx, criarComponenteAba("Novo", splitPane));
         tabbedPane.setSelectedComponent(splitPane);
     }
     
+    /**
+     * Cria o painel de edição de texto com números das linhas, as linhas são atualizadas automaticamente, 
+     * área de mensagens e zoom na tela
+     * @param editor janela de edição de texto
+     * @return JSplitPane painel configurado
+     */
     private JSplitPane criarPainelEdicao(EditorTab editor) {
-        // Área de edição com números de linha
         JScrollPane scrollEditor = new JScrollPane(
             editor.getTextArea(),
             JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
@@ -72,23 +78,19 @@ public class EditorManager extends JPanel {
         );
         scrollEditor.setRowHeaderView(editor.getLineNumbers());
         
-        // Área de mensagens
         JScrollPane scrollMensagens = new JScrollPane(
             editor.getMensagensArea(),
             JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
             JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS
         );
         
-        // Painel dividido
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, scrollEditor, scrollMensagens);
         splitPane.setDividerLocation(500);
         splitPane.setOneTouchExpandable(true);
         splitPane.putClientProperty("editorTab", editor);
         
-        // Configurar o listener de document para atualizar números de linha
         editor.configurarDocumentListener(splitPane);
         
-        // Configurar zoom com scroll do mouse
         adicionarZoomScroll(editor.getTextArea());
         
         return splitPane;
@@ -120,14 +122,13 @@ public class EditorManager extends JPanel {
                         "Salvar alterações"
                     );
                     if (opt == 2 || opt == JOptionPane.CLOSED_OPTION) {
-                        return; // Não fecha
+                        return;
                     }
-                    if (opt == 0) { // Sim
-                        tabbedPane.setSelectedIndex(idx); // Garante que está na aba certa
+                    if (opt == 0) {
+                        tabbedPane.setSelectedIndex(idx);
                         salvarArquivo();
                         if (editor.isAlterado()) return;
                     }
-                    // Se Não (opt == 1), apenas fecha
                 }
                 tabbedPane.remove(idx);
             }
@@ -183,7 +184,7 @@ public class EditorManager extends JPanel {
                     }
                     editor.setArquivoAtual(arquivo);
                 } else {
-                    return; // se cancelar, não faz nada
+                    return;
                 }
             }
             
@@ -192,7 +193,6 @@ public class EditorManager extends JPanel {
             statusBar.setText(editor.getArquivoAtual().getAbsolutePath());
             editor.setAlterado(false);
             
-            // Atualiza o título da aba
             JSplitPane split = (JSplitPane) tabbedPane.getSelectedComponent();
             atualizarTituloAba(split);
             
@@ -275,7 +275,7 @@ public class EditorManager extends JPanel {
         if (idx != -1) {
             String nome = (editor.getArquivoAtual() != null) ? editor.getArquivoAtual().getName() : "Novo";
             if (editor.isAlterado()) nome = "*" + nome;
-            // Atualiza o label do componente da aba
+
             Component tabComponent = tabbedPane.getTabComponentAt(idx);
             if (tabComponent instanceof JPanel) {
                 for (Component c : ((JPanel) tabComponent).getComponents()) {
@@ -288,33 +288,38 @@ public class EditorManager extends JPanel {
     }
     
     public void acaoNovo() {
-        String[] opcoes = { "Nova Aba", "Substituir Aba Atual", "Cancelar" };
-        int escolha = DialogFactory.showOptionDialog(
-                this,
-                "O que deseja fazer?",
-                "Novo Arquivo",
-                opcoes);
-
-        if (escolha == 0) { // Nova Aba
+        if (tabbedPane.getTabCount() == 0) {
             adicionarNovaAba();
-        } else if (escolha == 1) { // Substituir Aba Atual
-            EditorTab editor = getEditorAtual();
-            editor.getTextArea().setText("");
-            editor.getMensagensArea().setText("");
-            statusBar.setText("");
-            editor.setArquivoAtual(null);
-            editor.setAlterado(false);
-            // Atualiza o nome da aba para "Novo" no componente customizado
-            int idx = tabbedPane.getSelectedIndex();
-            Component tabComponent = tabbedPane.getTabComponentAt(idx);
-            if (tabComponent instanceof JPanel) {
-                for (Component c : ((JPanel) tabComponent).getComponents()) {
-                    if (c instanceof JLabel) {
-                        ((JLabel) c).setText("Novo  ");
+        } else {
+            String[] opcoes = { "Nova Aba", "Substituir Aba Atual", "Cancelar" };
+            int escolha = DialogFactory.showOptionDialog(
+                    this,
+                    "O que deseja fazer?",
+                    "Novo Arquivo",
+                    opcoes);
+    
+            if (escolha == 0) {
+                adicionarNovaAba();
+            } else if (escolha == 1) {
+                EditorTab editor = getEditorAtual();
+                editor.getTextArea().setText("");
+                editor.getMensagensArea().setText("");
+                statusBar.setText("");
+                editor.setArquivoAtual(null);
+                editor.setAlterado(false);
+
+                int idx = tabbedPane.getSelectedIndex();
+                Component tabComponent = tabbedPane.getTabComponentAt(idx);
+                if (tabComponent instanceof JPanel) {
+                    for (Component c : ((JPanel) tabComponent).getComponents()) {
+                        if (c instanceof JLabel) {
+                            ((JLabel) c).setText("Novo  ");
+                        }
                     }
                 }
             }
         }
+
     }
     
     private void setupKeyboardShortcuts() {
@@ -332,14 +337,12 @@ public class EditorManager extends JPanel {
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), "equipe",
                 () -> mostrarMensagem("Equipe: Pedro Godri, Yasmin, Gabriel."));
 
-        // Atalhos de zoom
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, InputEvent.CTRL_DOWN_MASK), "zoomMais", this::aumentarZoom);
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, InputEvent.CTRL_DOWN_MASK), "zoomMais2",
-                this::aumentarZoom); // Para o teclado padrão
+                this::aumentarZoom);
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_DOWN_MASK), "zoomMenos",
                 this::diminuirZoom);
 
-        // Atalho para alternar dark mode
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK), "darkMode", this::alternarDarkMode);
     }
 
