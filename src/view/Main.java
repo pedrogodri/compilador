@@ -11,7 +11,8 @@ public class Main extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
-    private int fontSize = 14; // tamanho inicial da fonte
+    /// Tamanho inicial da fonte
+    private int fontSize = 14;
     private boolean darkMode = false;
 
     private JTabbedPane tabbedPane;
@@ -34,7 +35,7 @@ public class Main extends JFrame {
         JTextArea mensagensArea;
         File arquivoAtual;
         int fontSize;
-        boolean alterado = false; // NOVO: indica se houve alteração
+        boolean alterado = false;
 
         EditorTab(int fontSize) {
             this.fontSize = fontSize;
@@ -57,7 +58,7 @@ public class Main extends JFrame {
         initializeComponents();
         setupEventListeners();
         setupKeyboardShortcuts();
-        adicionarNovaAba(); // Cria a primeira aba ao iniciar
+        adicionarNovaAba();
     }
     
     /**
@@ -73,13 +74,11 @@ public class Main extends JFrame {
         JPanel contentPane = new JPanel(new BorderLayout());
         setContentPane(contentPane);
 
-        // Criar toolbar
         toolBar = new JToolBar();
         toolBar.setFloatable(false);
         toolBar.setPreferredSize(new Dimension(getWidth(), 70));
         contentPane.add(toolBar, BorderLayout.NORTH);
 
-        // Criar botões
         btnNovo = new JButton("Novo [Ctrl+N]");
         btnNovo.setIcon(new ImageIcon(Main.class.getResource("/assets/icons/new.png")));
         btnNovo.setPreferredSize(new Dimension(160, 50));
@@ -170,11 +169,9 @@ public class Main extends JFrame {
         btnEquipe.setMinimumSize(btnSize);
         btnEquipe.setMaximumSize(btnSize);
 
-        // Criar TabbedPane
         tabbedPane = new JTabbedPane();
         contentPane.add(tabbedPane, BorderLayout.CENTER);
 
-        // Criar status bar
         statusBar = new JLabel();
         statusBar.setBorder(BorderFactory.createEtchedBorder());
         statusBar.setPreferredSize(new Dimension(getWidth(), 25));
@@ -185,7 +182,6 @@ public class Main extends JFrame {
      * Configura os event listeners
      */
     private void setupEventListeners() {
-        // Event listeners dos botões
         btnNovo.addActionListener(e -> acaoNovo());
         btnAbrir.addActionListener(e -> acaoAbrir());
         btnSalvar.addActionListener(e -> acaoSalvar());
@@ -193,9 +189,8 @@ public class Main extends JFrame {
         btnColar.addActionListener(e -> getEditorAtual().textArea.paste());
         btnRecortar.addActionListener(e -> getEditorAtual().textArea.cut());
         btnCompilar.addActionListener(e -> mostrarMensagem("Compilação de programas ainda não foi implementada."));
-        btnEquipe.addActionListener(e -> mostrarMensagem("Equipe: Pedro Godri, Yasmin, Gabriel."));
+        btnEquipe.addActionListener(e -> mostrarMensagem("Equipe: Gabriel Bugmann Vansuita, Pedro Henrique Godri, Yasmin Victória Alves de Souza."));
 
-        // Listener para mudança de aba
         tabbedPane.addChangeListener(e -> {
             if (tabbedPane.getSelectedComponent() != null) {
                 EditorTab editor = getEditorAtual();
@@ -224,16 +219,14 @@ public class Main extends JFrame {
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0), "compilar",
                 () -> mostrarMensagem("Compilação de programas ainda não foi implementada."));
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), "equipe",
-                () -> mostrarMensagem("Equipe: Pedro Godri, Yasmin, Gabriel."));
+                () -> mostrarMensagem("Equipe: Gabriel Bugmann Vansuita, Pedro Henrique Godri, Yasmin Victória Alves de Souza."));
 
-        // Atalhos de zoom
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, InputEvent.CTRL_DOWN_MASK), "zoomMais", this::aumentarZoom);
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, InputEvent.CTRL_DOWN_MASK), "zoomMais2",
                 this::aumentarZoom); // Para o teclado padrão
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_DOWN_MASK), "zoomMenos",
                 this::diminuirZoom);
 
-        // Atalho para alternar dark mode
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK), "darkMode", this::alternarDarkMode);
     }
 
@@ -248,33 +241,37 @@ public class Main extends JFrame {
     }
 
     private void acaoNovo() {
-        String[] opcoes = { "Nova Aba", "Substituir Aba Atual", "Cancelar" };
-        int escolha = JOptionPane.showOptionDialog(
-                this,
-                "O que deseja fazer?",
-                "Novo Arquivo",
-                JOptionPane.DEFAULT_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                opcoes,
-                opcoes[0]);
-
-        if (escolha == 0) { // Nova Aba
+        if (tabbedPane.getTabCount() == 0) {
             adicionarNovaAba();
-        } else if (escolha == 1) { // Substituir Aba Atual
-            EditorTab editor = getEditorAtual();
-            editor.textArea.setText("");
-            editor.mensagensArea.setText("");
-            statusBar.setText("");
-            editor.arquivoAtual = null;
-            editor.alterado = false;
-            // Atualiza o nome da aba para "Novo" no componente customizado
-            int idx = tabbedPane.getSelectedIndex();
-            Component tabComponent = tabbedPane.getTabComponentAt(idx);
-            if (tabComponent instanceof JPanel) {
-                for (Component c : ((JPanel) tabComponent).getComponents()) {
-                    if (c instanceof JLabel) {
-                        ((JLabel) c).setText("Novo  ");
+        } else {
+            String[] opcoes = { "Nova Aba", "Substituir Aba Atual", "Cancelar" };
+            int escolha = JOptionPane.showOptionDialog(
+                    this,
+                    "O que deseja fazer?",
+                    "Novo Arquivo",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    opcoes,
+                    opcoes[0]);
+    
+            if (escolha == 0) {
+                adicionarNovaAba();
+            } else if (escolha == 1) {
+                EditorTab editor = getEditorAtual();
+                editor.textArea.setText("");
+                editor.mensagensArea.setText("");
+                statusBar.setText("");
+                editor.arquivoAtual = null;
+                editor.alterado = false;
+
+                int idx = tabbedPane.getSelectedIndex();
+                Component tabComponent = tabbedPane.getTabComponentAt(idx);
+                if (tabComponent instanceof JPanel) {
+                    for (Component c : ((JPanel) tabComponent).getComponents()) {
+                        if (c instanceof JLabel) {
+                            ((JLabel) c).setText("Novo  ");
+                        }
                     }
                 }
             }
@@ -289,7 +286,6 @@ public class Main extends JFrame {
             File arquivo = chooser.getSelectedFile();
             EditorTab editor = new EditorTab(fontSize);
 
-            // Carrega o conteúdo do arquivo
             try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
                 StringBuilder sb = new StringBuilder();
                 String linha;
@@ -297,7 +293,7 @@ public class Main extends JFrame {
                     sb.append(linha).append("\n");
                 }
                 editor.textArea.setText(sb.toString());
-                editor.arquivoAtual = arquivo; // IMPORTANTE!
+                editor.arquivoAtual = arquivo;
                 editor.alterado = false;
             } catch (IOException ex) {
                 mostrarMensagem("Erro ao abrir o arquivo: " + ex.getMessage());
@@ -397,19 +393,19 @@ public class Main extends JFrame {
                     if (!editor.arquivoAtual.getName().toLowerCase().endsWith(".txt")) {
                         editor.arquivoAtual = new File(editor.arquivoAtual.getAbsolutePath() + ".txt");
                     }
-                    // Troca o nome da aba
+                    
                     int idx = tabbedPane.getSelectedIndex();
                     tabbedPane.setTitleAt(idx, editor.arquivoAtual.getName());
                 } else {
-                    return; // se cancelar, não faz nada
+                    return;
                 }
             }
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(editor.arquivoAtual))) {
                 editor.textArea.write(writer);
                 editor.mensagensArea.setText("");
                 statusBar.setText(editor.arquivoAtual.getAbsolutePath());
-                editor.alterado = false; // MARCA COMO NÃO ALTERADO APÓS SALVAR
-                // Atualiza o título da aba para remover o *
+                editor.alterado = false;
+                
                 JSplitPane split = (JSplitPane) tabbedPane.getSelectedComponent();
                 atualizarTituloAba(split);
             }
@@ -516,7 +512,12 @@ public class Main extends JFrame {
         tabbedPane.setSelectedComponent(splitPane);
     }
 
-    // Adicione este método na sua classe Main
+    /**
+     * Adicione este método na sua classe Main
+     * @param titulo Título do componente
+     * @param componente O componente em si
+     * @return Nulo para sair em certos casos
+     */
     private JPanel criarComponenteAba(String titulo, Component componente) {
         JPanel pnl = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         pnl.setOpaque(false);
@@ -548,14 +549,13 @@ public class Main extends JFrame {
                         opcoes[0]
                     );
                     if (opt == 2 || opt == JOptionPane.CLOSED_OPTION) {
-                        return; // Não fecha
+                        return;
                     }
                     if (opt == 0) { // Sim
-                        tabbedPane.setSelectedIndex(idx); // Garante que está na aba certa
+                        tabbedPane.setSelectedIndex(idx);
                         acaoSalvar();
                         if (editor.alterado) return;
                     }
-                    // Se Não (opt == 1), apenas fecha
                 }
                 tabbedPane.remove(idx);
             }
@@ -571,14 +571,17 @@ public class Main extends JFrame {
         return (EditorTab) split.getClientProperty("editorTab");
     }
 
-    // Atualiza o título da aba, adicionando/removendo o * conforme o estado de alteração
+    /**
+     * Atualiza o título da aba, adicionando/removendo o * conforme o estado de alteração
+     * @param splitPane Painel
+     */
     private void atualizarTituloAba(JSplitPane splitPane) {
         EditorTab editor = (EditorTab) splitPane.getClientProperty("editorTab");
         int idx = tabbedPane.indexOfComponent(splitPane);
         if (idx != -1) {
             String nome = (editor.arquivoAtual != null) ? editor.arquivoAtual.getName() : "Novo";
             if (editor.alterado) nome = "*" + nome;
-            // Atualiza o label do componente da aba
+            
             Component tabComponent = tabbedPane.getTabComponentAt(idx);
             if (tabComponent instanceof JPanel) {
                 for (Component c : ((JPanel) tabComponent).getComponents()) {
