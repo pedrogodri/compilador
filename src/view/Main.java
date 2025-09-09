@@ -7,6 +7,10 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import utils.gals.LexicalError;
+import utils.gals.Lexico;
+import utils.gals.Token;
+
 public class Main extends JFrame {
 
     private static final long serialVersionUID = 1L;
@@ -122,6 +126,40 @@ public class Main extends JFrame {
         toolBar.add(btnRecortar);
 
         btnCompilar = new JButton("Compilar [F7]");
+        btnCompilar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		Lexico lexico = new Lexico();
+        			System.out.println(getEditorAtual().textArea.getLineCount());
+        		   //lexico.setInput(getEditorAtual().textArea.getText());
+        		   try {
+        		      Token t = null;
+        		      while ( (t = lexico.nextToken()) != null ) {
+        		           System.out.println(t.getLexeme() + " " + t.getId() + " " + t.getPosition()); 
+        		     
+        		           // só escreve o lexema, necessário escrever t.getId, t.getPosition()
+        		    
+        		           // t.getId () - retorna o identificador da classe (ver Constants.java) 
+        		           // necessário adaptar, pois deve ser apresentada a classe por extenso
+        		     
+        		          // t.getPosition () - retorna a posição inicial do lexema no editor 
+        		          // necessário adaptar para mostrar a linha	
+
+        		           // esse código apresenta os tokens enquanto não ocorrer erro
+        		           // no entanto, os tokens devem ser apresentados SÓ se não ocorrer erro,
+        		           // necessário adaptar para atender o que foi solicitado		   
+        		      }	
+        		   }
+        		   catch ( LexicalError error ) {  // tratamento de erros
+        		      System.out.println(error.getMessage() + " em " + error.getPosition());
+        		 
+        		      // e.getMessage() - retorna a mensagem de erro de SCANNER_ERRO (ver ScannerConstants.java)
+        		      // necessário adaptar conforme o enunciado da parte 2
+        		    
+        		      // e.getPosition() - retorna a posição inicial do erro 
+        		      // necessário adaptar para mostrar a linha  
+        		    } 
+        	}
+        });
         btnCompilar.setIcon(new ImageIcon(Main.class.getResource("/assets/icons/play.png")));
         btnCompilar.setPreferredSize(new Dimension(160, 50));
         btnCompilar.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -188,7 +226,6 @@ public class Main extends JFrame {
         btnCopiar.addActionListener(e -> getEditorAtual().textArea.copy());
         btnColar.addActionListener(e -> getEditorAtual().textArea.paste());
         btnRecortar.addActionListener(e -> getEditorAtual().textArea.cut());
-        btnCompilar.addActionListener(e -> mostrarMensagem("Compilação de programas ainda não foi implementada."));
         btnEquipe.addActionListener(e -> mostrarMensagem("Equipe: Gabriel Bugmann Vansuita, Pedro Henrique Godri, Yasmin Victória Alves de Souza."));
 
         tabbedPane.addChangeListener(e -> {
