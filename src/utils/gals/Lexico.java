@@ -4,6 +4,8 @@ public class Lexico implements Constants
 {
     private int position;
     private String input;
+    private int line = 1;
+    private boolean incrementLine = true;
 
     public Lexico()
     {
@@ -32,6 +34,7 @@ public class Lexico implements Constants
             return null;
 
         int start = position;
+        int startLine = line;
 
         int state = 0;
         int lastState = 0;
@@ -56,7 +59,7 @@ public class Lexico implements Constants
             }
         }
         if (endState < 0 || (endState != state && tokenForState(lastState) == -2))
-            throw new LexicalError(SCANNER_ERROR[lastState], start);
+            throw new LexicalError(SCANNER_ERROR[lastState], startLine);
 
         position = end;
 
@@ -68,7 +71,7 @@ public class Lexico implements Constants
         {
             String lexeme = input.substring(start, end);
             token = lookupToken(token, lexeme);
-            return new Token(token, lexeme, start);
+            return new Token(token, lexeme, startLine);
         }
     }
 
@@ -128,9 +131,17 @@ public class Lexico implements Constants
 
     private char nextChar()
     {
-        if (hasInput())
-            return input.charAt(position++);
-        else
+        if (!hasInput())
             return (char) -1;
+
+        char c = input.charAt(position++);
+
+        if (c == '\n' && incrementLine) {
+            line++;
+            incrementLine = false;
+        } else if (c == '\n' && !incrementLine)
+            incrementLine = true;
+
+        return c;
     }
 }

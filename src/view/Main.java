@@ -6,7 +6,7 @@ import java.io.*;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-
+import utils.gals.Constants;
 import utils.gals.LexicalError;
 import utils.gals.Lexico;
 import utils.gals.Token;
@@ -128,36 +128,7 @@ public class Main extends JFrame {
         btnCompilar = new JButton("Compilar [F7]");
         btnCompilar.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		Lexico lexico = new Lexico();
-        			System.out.println(getEditorAtual().textArea.getLineCount());
-        		   //lexico.setInput(getEditorAtual().textArea.getText());
-        		   try {
-        		      Token t = null;
-        		      while ( (t = lexico.nextToken()) != null ) {
-        		           System.out.println(t.getLexeme() + " " + t.getId() + " " + t.getPosition()); 
-        		     
-        		           // só escreve o lexema, necessário escrever t.getId, t.getPosition()
-        		    
-        		           // t.getId () - retorna o identificador da classe (ver Constants.java) 
-        		           // necessário adaptar, pois deve ser apresentada a classe por extenso
-        		     
-        		          // t.getPosition () - retorna a posição inicial do lexema no editor 
-        		          // necessário adaptar para mostrar a linha	
-
-        		           // esse código apresenta os tokens enquanto não ocorrer erro
-        		           // no entanto, os tokens devem ser apresentados SÓ se não ocorrer erro,
-        		           // necessário adaptar para atender o que foi solicitado		   
-        		      }	
-        		   }
-        		   catch ( LexicalError error ) {  // tratamento de erros
-        		      System.out.println(error.getMessage() + " em " + error.getPosition());
-        		 
-        		      // e.getMessage() - retorna a mensagem de erro de SCANNER_ERRO (ver ScannerConstants.java)
-        		      // necessário adaptar conforme o enunciado da parte 2
-        		    
-        		      // e.getPosition() - retorna a posição inicial do erro 
-        		      // necessário adaptar para mostrar a linha  
-        		    } 
+                acaoCompilar();
         	}
         });
         btnCompilar.setIcon(new ImageIcon(Main.class.getResource("/assets/icons/play.png")));
@@ -254,7 +225,7 @@ public class Main extends JFrame {
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK), "recortar",
                 () -> getEditorAtual().textArea.cut());
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0), "compilar",
-                () -> mostrarMensagem("Compilação de programas ainda não foi implementada."));
+                () -> acaoCompilar());
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), "equipe",
                 () -> mostrarMensagem("Equipe: Gabriel Bugmann Vansuita, Pedro Henrique Godri, Yasmin Victória Alves de Souza."));
 
@@ -389,6 +360,48 @@ public class Main extends JFrame {
 
             adicionarZoomScroll(editor.textArea);
         }
+    }
+
+    /**
+     * Realiza a compilação lexica da aba atual 
+     */
+    private void acaoCompilar() {
+        Lexico lexico = new Lexico();
+        // System.out.println(getEditorAtual().textArea.getLineCount());
+        lexico.setInput(getEditorAtual().textArea.getText());
+        try {
+            Token t = null;
+            String texto = String.format("%-10s %-20s %-10s%n","Linha", "Classe", "Lexema");
+
+            while ( (t = lexico.nextToken()) != null ) {
+            texto += String.format("%-10s %-20s %-10s%n", t.getPosition(), 
+                Constants.TOKEN_NAMES.getOrDefault(t.getId(), "Token desconhecido"), t.getLexeme());
+            
+                // só escreve o lexema, necessário escrever t.getId, t.getPosition()
+        
+                // t.getId () - retorna o identificador da classe (ver Constants.java) 
+                // necessário adaptar, pois deve ser apresentada a classe por extenso
+            
+                // t.getPosition () - retorna a posição inicial do lexema no editor 
+                // necessário adaptar para mostrar a linha	
+
+                // esse código apresenta os tokens enquanto não ocorrer erro
+                // no entanto, os tokens devem ser apresentados SÓ se não ocorrer erro,
+                // necessário adaptar para atender o que foi solicitado		   
+            }
+            
+            texto += "\nprograma compilado com sucesso";
+            mostrarMensagem(texto);
+        }
+        catch ( LexicalError error ) {  // tratamento de erros
+            mostrarMensagem("linha " + error.getPosition() + ": " + error.getMessage());
+        
+            // e.getMessage() - retorna a mensagem de erro de SCANNER_ERRO (ver ScannerConstants.java)
+            // necessário adaptar conforme o enunciado da parte 2
+        
+            // e.getPosition() - retorna a posição inicial do erro 
+            // necessário adaptar para mostrar a linha  
+        } 
     }
 
     private void adicionarZoomScroll(JTextArea textArea) {
