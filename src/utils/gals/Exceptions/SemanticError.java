@@ -1,4 +1,4 @@
-package utils.gals;
+package utils.gals.Exceptions;
 
 public class SemanticError extends AnalysisError
 {

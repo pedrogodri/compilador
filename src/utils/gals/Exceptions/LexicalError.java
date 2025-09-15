@@ -1,9 +1,9 @@
-package utils.gals;
+package utils.gals.Exceptions;
 
 public class LexicalError extends AnalysisError
 {
     public LexicalError(String msg, int position)
-	 {
+    {
         super(msg, position);
     }
 

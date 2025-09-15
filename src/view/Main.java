@@ -7,9 +7,10 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import utils.gals.Constants;
-import utils.gals.LexicalError;
+import utils.gals.Exceptions.AnalysisError;
 import utils.gals.Lexico;
 import utils.gals.Token;
+import utils.gals.Exceptions.SimboloInvalidoError;
 
 public class Main extends JFrame {
 
@@ -393,8 +394,12 @@ public class Main extends JFrame {
             texto += "\nprograma compilado com sucesso";
             mostrarMensagem(texto);
         }
-        catch ( LexicalError error ) {  // tratamento de erros
-            mostrarMensagem("linha " + error.getPosition() + ": " + error.getMessage());
+        catch (AnalysisError error) {  // tratamento de erros
+            if (error instanceof SimboloInvalidoError simError)
+                mostrarMensagem("linha " + simError.getPosition() + ": " + simError.getCaracter() + " " 
+                + simError.getMessage());
+            else
+                mostrarMensagem("linha " + error.getPosition() + ": " + error.getMessage());
         
             // e.getMessage() - retorna a mensagem de erro de SCANNER_ERRO (ver ScannerConstants.java)
             // necessário adaptar conforme o enunciado da parte 2
