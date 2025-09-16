@@ -1,0 +1,111 @@
+#Options
+GenerateScanner = true
+GenerateParser = true
+Language = Java
+ScannerName = Lexico
+ParserName = Sintatico
+SemanticName = Semantico
+ScannerCaseSensitive = true
+ScannerTable = Compact
+Input = String
+Parser = LL
+#RegularDefinitions
+mai: [A-Z]
+min : [a-z]
+letra: {mai} | {min}
+dig: [0-9]
+dez_milhar: [1-9] {dig}? {dig}? {dig}?  {dig}?
+dez_milhar_invert: {dig}? {dig}? {dig}? {dig}? [1-9]
+
+bloco: "{" [^\{\}]* "}"
+linha: "\\" (.)* "\\"
+
+#Tokens
+identificador: ({min} | {mai} {min})+ (_{dig}+)?
+cint: 0 | {dez_milhar}
+cfloat: (0 | {dez_milhar})"."({dez_milhar_invert} | 0)
+cstring: \"[^\n\""\"]*\"
+
+pr_abstrato = identificador: "abstrato"
+pr_add = identificador: "add"
+pr_and = identificador: "and"
+pr_begin = identificador: "begin"
+pr_bool = identificador: "bool"
+pr_classe = identificador: "classe"
+pr_comport = identificador: "comportamento"
+pr_concreto = identificador: "concreto"
+pr_count = identificador: "count"
+pr_delete = identificador: "delete"
+pr_do = identificador: "do"
+pr_elementof = identificador: "elementOf"
+pr_else = identificador: "else"
+pr_end = identificador: "end"
+pr_false = identificador: "false"
+pr_fim = identificador: "fim"
+pr_float = identificador: "float"
+pr_if = identificador: "if"
+pr_int = identificador: "int"
+pr_list = identificador: "list"
+pr_not = identificador: "not"
+pr_or = identificador: "or"
+pr_print = identificador: "print"
+pr_publico = identificador: "publico"
+pr_protegido = identificador: "protegido"
+pr_propriedade = identificador: "propriedade"
+pr_read = identificador: "read"
+pr_size = identificador: "size"
+pr_string = identificador: "string"
+pr_true = identificador: "true"
+pr_until = identificador: "until"
+
+
+"+" 
+"-" 
+"*" 
+"/" 
+"==" 
+"~=" 
+"<" 
+">" 
+"=" 
+"<-" 
+"(" 
+")" 
+";"
+":"
+","
+
+
+:[\s\t\n]
+
+:!{bloco}
+:!{linha}
+#NonTerminals
+<classe>
+<heranca> 
+<props> 
+<comport>
+<list_met>
+<met>
+<params_opcs>
+<tipo_met>
+<list_prop>
+<uma>
+<visib>
+<list_id>
+<params>
+<tipo>
+#Grammar
+<classe>::= identificador "=" pr_classe <heranca> <props> <comport> pr_fim ;
+
+<heranca>::= "(" identificador ")" | î ;
+<comport>::= î | pr_comport <list_met> ;
+<list_met>::= <met> | <met><list_met> ;
+<met>::= identificador <params_opcs> ";" <tipo_met>;
+<params_opcs>::=î | <params>;
+<tipo_met>::= î | pr_abstrato | pr_concreto ;
+<props> ::= î | pr_propriedade <list_prop> ;
+<list_prop>::= <uma> | <uma> <list_prop>;
+<uma>::= <visib> <list_id> ":" <tipo> ";" ;
+<visib>::= î | pr_publico | pr_abstrato | pr_protegido ;
+<list_id>::= identificador | identificador "," <list_id> ;
