@@ -1,6 +1,5 @@
 package utils.gals;
 
-import utils.gals.Exceptions.AnalysisError;
 import utils.gals.Exceptions.LexicalError;
 import utils.gals.Exceptions.SimboloInvalidoError;
 
@@ -9,7 +8,6 @@ public class Lexico implements Constants
     private int position;
     private String input;
     private int line = 1;
-    private boolean incrementLine = true;
 
     public Lexico()
     {
@@ -32,7 +30,7 @@ public class Lexico implements Constants
         position = pos;
     }
 
-    public Token nextToken() throws AnalysisError
+    public Token nextToken() throws LexicalError
     {
         if (!hasInput())
             return null;
@@ -72,6 +70,15 @@ public class Lexico implements Constants
         }
 
         position = end;
+
+        // recalcula todos os itens para pegar as quebras de linha
+        // (usado para não ler a quebra de linha duas vezes)
+        line = 1;
+        for (int i = 0; i < end; i++) {
+            if (input.charAt(i) == '\n') {
+                line++;
+            }
+        }
 
         int token = tokenForState(endState);
 
@@ -144,14 +151,6 @@ public class Lexico implements Constants
         if (!hasInput())
             return (char) -1;
 
-        char c = input.charAt(position++);
-
-        if (c == '\n' && incrementLine) {
-            line++;
-            incrementLine = false;
-        } else if (c == '\n' && !incrementLine)
-            incrementLine = true;
-
-        return c;
+        return  input.charAt(position++);
     }
 }
