@@ -12,7 +12,6 @@ Parser = LL
 #RegularDefinitions
 mai: [A-Z]
 min : [a-z]
-letra: {mai} | {min}
 dig: [0-9]
 dez_milhar: [1-9] {dig}? {dig}? {dig}?  {dig}?
 dez_milhar_invert: {dig}? {dig}? {dig}? {dig}? [1-9]
@@ -79,8 +78,6 @@ pr_until = identificador: "until"
 
 
 <dec_variavel>
-//<comando_atribuicao>
-//<comando_manipulacao_lista>
 <comando_entrada_dados>
 <comando_saida_dados>
 <comando_selecao>
@@ -126,7 +123,6 @@ pr_until = identificador: "until"
 <lista_comandos_>
 #Grammar
 <programa> ::= pr_begin <lista_instrucoes> pr_end ;
-//<lista_instrucoes> ::= <instrucao> ";" | <instrucao> ";" <lista_instrucoes> ;
 <lista_instrucoes> ::= <instrucao> ";" <lista_instrucoes_> ;
 <lista_instrucoes_> ::= î | <lista_instrucoes> ;
 <instrucao> ::= <dec_variavel> | <comando> ;
@@ -134,17 +130,14 @@ pr_until = identificador: "until"
 
 
 <dec_variavel> ::= <tipo> <lista_id> ;
-//<lista_id>::= identificador | identificador "," <lista_id> ;
 <lista_id>::= identificador <lista_id_> ;
 <lista_id_>::= î | "," <lista_id> ;
 <tipo_simples> ::= pr_bool | pr_int | pr_float | pr_string ;
 <tipo> ::= <tipo_simples> | <lista_tipo> ;
 <lista_tipo> ::= pr_list "(" <tipo_simples> "," cint ")" ;
 
-//<comando_atribuicao> ::= identificador "=" <expressao> | identificador "<-" <expressao> ;
 <comando_atribuicao_> ::= "=" <expressao> | "<-" <expressao> ;
 
-//<comando_manipulacao_lista> ::= identificador pr_add "(" <elemento> "," <posicao> ")" | identificador pr_delete "(" <posicao> ")" ;
 <comando_manipulacao_lista_> ::= pr_add "(" <elemento> "," <posicao> ")" | pr_delete "(" <posicao> ")" ;
 
 <comando_intermediario_atr_mani> ::= identificador <comando_intermediario_atr_mani_> ;
@@ -154,19 +147,16 @@ pr_until = identificador: "until"
 <posicao> ::= <expressao> ;
 
 <comando_entrada_dados> ::= pr_read "(" <lista_entrada> ")" ;
-//<lista_entrada> ::= <string_read> identificador | <string_read> identificador "," <lista_entrada> ;
 <lista_entrada> ::= <string_read> identificador <lista_entrada_> ;
 <lista_entrada_> ::= î | "," <lista_entrada> ;
 <string_read> ::= cstring "," | î ;
 
 <comando_saida_dados> ::= pr_print "(" <lista_expressoes> ")" ;
-//<lista_expressoes> ::= <expressao> | <expressao> "," <lista_expressoes> ;
 <lista_expressoes> ::= <expressao> <lista_expressoes_> ;
 <lista_expressoes_> ::= î | "," <lista_expressoes> ;
 
 
 <comando_selecao> ::= pr_if <expressao> <lista_comandos> <else> pr_end ;
-//<lista_comandos> ::= <comando> ";" | <comando> ";" <lista_comandos> ;
 <lista_comandos> ::= <comando> ";" <lista_comandos_> ;
 <lista_comandos_> ::= î | <lista_comandos> ;
 <else> ::= pr_else <lista_comandos> | î ;

@@ -1,0 +1,67 @@
+1a/2a PARTE da aula: IMPLEMENTAÇÃO
+1) alterar especificação léxica e sintática conforme correção do trabalho no.3
+
+2) verificar opções (em Ferramentas > Opções): 
+   2.1 aba GERAL
+       -> selecionar Analisador Léxico e Sintático, escolher linguagem
+
+  2.2 aba LÉXICO
+      -> Forma de Entrada: String
+      -> Implementação do Autômato: Tabela Compactada 
+	  -> Diferenciar maiúsculas/minúsculas ...
+
+  2.3 aba SINTÁTICO
+      -> Classe do analisador sintático: LL(1)
+
+3) gerar código (em Ferramentas > Gerar Código): escolher pasta, gerar todos os arquivos
+
+4) para usar o código gerado, deve ser chamado a partir da ação associada ao botão compilar	
+	
+TROCAR:
+	
+   Lexico lexico = new Lexico();
+   lexico.setInput( /* entrada */ );
+   try {
+      Token t = null;
+      while ( (t = lexico.nextToken()) != null ) {
+         System.out.println(t.getLexeme());
+		 // código implementado pela equipe para atender o que
+		 // foi solicitado na implementação do analisador léxico 
+      }
+   }
+   catch ( LexicalError e ) { // tratamento de erros
+      System.out.println(e.getMessage() + " em " + e.getPosition());
+      
+	  // código implementado pela equipe para atender o que
+      // foi solicitado na implementação do analisador léxico 	  
+   }
+	
+	
+POR:
+	
+   Lexico lexico = new Lexico();
+   Sintatico sintatico = new Sintatico();
+   Semantico semantico = new Semantico();
+   lexico.setInput( /*  texto do editor de textos */ );
+   try {
+      sintatico.parse(lexico, semantico);    // tradução dirigida pela sintaxe
+   }
+   // mensagem: programa compilado com sucesso - na área reservada para mensagens
+   catch ( LexicalError e ) {
+      // tratar erros léxicos, conforme especificação da parte 2 - analisador léxico
+   }
+   catch ( SyntaticError e ) {
+      System.out.println(e.getMessage() + " em " + e.getPosition());
+
+      // e.getMessage() são os símbolos esperados
+      // e.getMessage() - retorna a mensagem de erro de PARSER_ERROR (ver ParserConstants.java)
+      // necessário adaptar conforme o enunciado da parte 3
+    
+      // e.getPosition() - retorna a posição inicial do erro 
+      // necessário adaptar para mostrar a linha  
+			 
+      // necessário mostrar também o símbolo encontrado 
+   }
+   catch ( SemanticError e ) {
+      // trata erros semânticos na parte 4
+   }git
