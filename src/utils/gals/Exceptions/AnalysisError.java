@@ -1,4 +1,4 @@
-package utils.gals.Exceptions;
+package utils.gals.exceptions;
 
 public class AnalysisError extends Exception
 {
