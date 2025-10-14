@@ -1,8 +1,5 @@
 package utils.gals;
 
-import java.util.HashMap;
-import java.util.Map;
-
 // public interface Constants extends ScannerConstants
 // {
 //     int EPSILON  = 0;

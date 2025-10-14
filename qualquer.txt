@@ -64,4 +64,4 @@ POR:
    }
    catch ( SemanticError e ) {
       // trata erros semânticos na parte 4
-   }git
+   }

@@ -6,11 +6,12 @@ import java.io.*;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import utils.gals.Constants;
-import utils.gals.Exceptions.AnalysisError;
 import utils.gals.Lexico;
-import utils.gals.Token;
-import utils.gals.Exceptions.SimboloInvalidoError;
+import utils.gals.Semantico;
+import utils.gals.Sintatico;
+import utils.gals.exceptions.LexicalError;
+import utils.gals.exceptions.SemanticError;
+import utils.gals.exceptions.SyntaticError;
 
 public class Main extends JFrame {
 
@@ -367,16 +368,16 @@ public class Main extends JFrame {
      * Realiza a compilação lexica da aba atual 
      */
     private void acaoCompilar() {
-        Lexico lexico = new Lexico();
+        // Lexico lexico = new Lexico();
         // System.out.println(getEditorAtual().textArea.getLineCount());
-        lexico.setInput(getEditorAtual().textArea.getText());
-        try {
-            Token t = null;
-            String texto = String.format("%-10s %-20s %-10s%n","Linha", "Classe", "Lexema");
+        // lexico.setInput(getEditorAtual().textArea.getText());
+        // try {
+        //     Token t = null;
+        //     String texto = String.format("%-10s %-20s %-10s%n","Linha", "Classe", "Lexema");
 
-            while ( (t = lexico.nextToken()) != null ) {
-            texto += String.format("%-10s %-20s %-10s%n", t.getPosition(), 
-                Constants.TOKEN_NAMES.getOrDefault(t.getId(), "Token desconhecido"), t.getLexeme());
+        //     while ( (t = lexico.nextToken()) != null ) {
+        //     texto += String.format("%-10s %-20s %-10s%n", t.getPosition(), 
+        //         Constants.TOKEN_NAMES.getOrDefault(t.getId(), "Token desconhecido"), t.getLexeme());
             
                 // só escreve o lexema, necessário escrever t.getId, t.getPosition()
         
@@ -389,24 +390,53 @@ public class Main extends JFrame {
                 // esse código apresenta os tokens enquanto não ocorrer erro
                 // no entanto, os tokens devem ser apresentados SÓ se não ocorrer erro,
                 // necessário adaptar para atender o que foi solicitado		   
-            }
+            // }
             
-            texto += "\nprograma compilado com sucesso";
-            mostrarMensagem(texto);
-        }
-        catch (AnalysisError error) {  // tratamento de erros
-            if (error instanceof SimboloInvalidoError simError)
-                mostrarMensagem("linha " + simError.getPosition() + ": " + simError.getCaracter() + " " 
-                + simError.getMessage());
-            else
-                mostrarMensagem("linha " + error.getPosition() + ": " + error.getMessage());
+        //     texto += "\nprograma compilado com sucesso";
+        //     mostrarMensagem(texto);
+        // }
+        // catch (AnalysisError error) {  // tratamento de erros
+        //     if (error instanceof SimboloInvalidoError simError)
+        //         mostrarMensagem("linha " + simError.getPosition() + ": " + simError.getCaracter() + " " 
+        //         + simError.getMessage());
+        //     else
+        //         mostrarMensagem("linha " + error.getPosition() + ": " + error.getMessage());
         
             // e.getMessage() - retorna a mensagem de erro de SCANNER_ERRO (ver ScannerConstants.java)
             // necessário adaptar conforme o enunciado da parte 2
         
             // e.getPosition() - retorna a posição inicial do erro 
             // necessário adaptar para mostrar a linha  
-        } 
+        // }
+
+            Lexico lexico = new Lexico();
+            Sintatico sintatico = new Sintatico();
+            Semantico semantico = new Semantico();
+            lexico.setInput(getEditorAtual().textArea.getText());
+            
+            try {
+                sintatico.parse(lexico, semantico);    // tradução dirigida pela sintaxe
+                mostrarMensagem("programa compilado com sucesso");
+            }
+            // mensagem: programa compilado com sucesso - na área reservada para mensagens
+            catch ( LexicalError e ) {
+                // tratar erros léxicos, conforme especificação da parte 2 - analisador léxico
+            }
+            catch ( SyntaticError e ) {
+                mostrarMensagem(e.getMessage() + " em " + e.getPosition());
+
+                // e.getMessage() são os símbolos esperados
+                // e.getMessage() - retorna a mensagem de erro de PARSER_ERROR (ver ParserConstants.java)
+                // necessário adaptar conforme o enunciado da parte 3
+                
+                // e.getPosition() - retorna a posição inicial do erro 
+                // necessário adaptar para mostrar a linha  
+                        
+                // necessário mostrar também o símbolo encontrado 
+            }
+            catch ( SemanticError e ) {
+                // trata erros semânticos na parte 4
+            }
     }
 
     private void adicionarZoomScroll(JTextArea textArea) {
