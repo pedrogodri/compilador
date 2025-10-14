@@ -141,88 +141,88 @@ public interface ParserConstants
     String[] PARSER_ERROR =
     {
         "",
-        "Era esperado fim de programa",
-        "Era esperado identificador",
-        "Era esperado cint",
-        "Era esperado cfloat",
-        "Era esperado cstring",
-        "Era esperado pr_add",
-        "Era esperado pr_and",
-        "Era esperado pr_begin",
-        "Era esperado pr_bool",
-        "Era esperado pr_count",
-        "Era esperado pr_delete",
-        "Era esperado pr_do",
-        "Era esperado pr_elementof",
-        "Era esperado pr_else",
-        "Era esperado pr_end",
-        "Era esperado pr_false",
-        "Era esperado pr_float",
-        "Era esperado pr_if",
-        "Era esperado pr_int",
-        "Era esperado pr_list",
-        "Era esperado pr_not",
-        "Era esperado pr_or",
-        "Era esperado pr_print",
-        "Era esperado pr_read",
-        "Era esperado pr_size",
-        "Era esperado pr_string",
-        "Era esperado pr_true",
-        "Era esperado pr_until",
-        "Era esperado \"+\"",
-        "Era esperado \"-\"",
-        "Era esperado \"*\"",
-        "Era esperado \"/\"",
-        "Era esperado \"==\"",
-        "Era esperado \"~=\"",
-        "Era esperado \"<\"",
-        "Era esperado \">\"",
-        "Era esperado \"=\"",
-        "Era esperado \"<-\"",
-        "Era esperado \"(\"",
-        "Era esperado \")\"",
-        "Era esperado \";\"",
-        "Era esperado \",\"",
-        "<programa> inválido",
-        "<lista_instrucoes> inválido",
-        "<instrucao> inválido",
-        "<comando> inválido",
-        "<dec_variavel> inválido",
-        "<comando_entrada_dados> inválido",
-        "<comando_saida_dados> inválido",
-        "<comando_selecao> inválido",
-        "<comando_repeticao> inválido",
-        "<tipo> inválido",
-        "<lista_id> inválido",
-        "<tipo_simples> inválido",
-        "<lista_tipo> inválido",
-        "<expressao> inválido",
-        "<elemento> inválido",
-        "<posicao> inválido",
-        "<lista_entrada> inválido",
-        "<string_read> inválido",
-        "<lista_expressoes> inválido",
-        "<lista_comandos> inválido",
-        "<else> inválido",
-        "<expressao_> inválido",
-        "<valor> inválido",
-        "<relacional> inválido",
-        "<relacional_> inválido",
-        "<operador_relacional> inválido",
-        "<aritmetica> inválido",
-        "<aritmetica_> inválido",
-        "<termo> inválido",
-        "<termo_> inválido",
-        "<fator> inválido",
-        "<fator_> inválido",
-        "<lista_instrucoes_> inválido",
-        "<comando_atribuicao_> inválido",
-        "<comando_manipulacao_lista_> inválido",
-        "<comando_intermediario_atr_mani> inválido",
-        "<comando_intermediario_atr_mani_> inválido",
-        "<lista_id_> inválido",
-        "<lista_entrada_> inválido",
-        "<lista_expressoes_> inválido",
-        "<lista_comandos_> inválido"
+        "esperado EOF",
+        "esperado identificador",
+        "esperado constante_int",
+        "esperado constante_float",
+        "esperado constante_string",
+        "esperado add",
+        "esperado and",
+        "esperado begin",
+        "esperado bool",
+        "esperado count",
+        "esperado delete",
+        "esperado do",
+        "esperado elementof",
+        "esperado else",
+        "esperado end",
+        "esperado false",
+        "esperado float",
+        "esperado if",
+        "esperado int",
+        "esperado list",
+        "esperado not",
+        "esperado or",
+        "esperado print",
+        "esperado read",
+        "esperado size",
+        "esperado string",
+        "esperado true",
+        "esperado until",
+        "esperado +",
+        "esperado -",
+        "esperado *",
+        "esperado /",
+        "esperado ==",
+        "esperado ~=",
+        "esperado <",
+        "esperado >",
+        "esperado =",
+        "esperado <-",
+        "esperado (",
+        "esperado )",
+        "esperado ;",
+        "esperado ,",
+        "<programa> inválido", // esperado begin
+        "<lista_instrucoes> inválido", // esperado identificador bool float int string list if do print read
+        "<instrucao> inválido", // esperado identificador bool do float if int list print read string 
+        "<comando> inválido", // esperado identificador do if print read 
+        "<dec_variavel> inválido", // esperado bool float int list string 
+        "<comando_entrada_dados> inválido", // esperado read
+        "<comando_saida_dados> inválido", // esperado print
+        "<comando_selecao> inválido", // esperado if
+        "<comando_repeticao> inválido", // esperado do
+        "<tipo> inválido", // esperado bool float int list string
+        "<lista_id> inválido", // esperado identificador 
+        "<tipo_simples> inválido", // esperado bool float int string | tipo
+        "<lista_tipo> inválido", // esperado list | tipo
+        "<expressao> inválido", // esperado identificador constante_int constante_float constante_string false not true + - (
+        "<elemento> inválido", // esperado identificador constante_int constante_float constante_string false not true + -(
+        "<posicao> inválido", // esperado identificador constante_int constante_float constante_string false not true + - (
+        "<lista_entrada> inválido", // identificador constante_string 
+        "<string_read> inválido", // esperado identificador constante_string 
+        "<lista_expressoes> inválido", // esperado identificador constante_int constante_float constante_string false not true + - (
+        "<lista_comandos> inválido", // esperado identificador do if print read
+        "<else> inválido", // esperado else end
+        "<expressao_> inválido", // esperado identificador and do if or print read ) ; ,
+        "<valor> inválido", // esperado identificador constante_int constante_float constante_string false list true + - (
+        "<relacional> inválido", // esperado identificador constante_int constante_float constante_string + - (
+        "<relacional_> inválido", // esperado identificador and do if or print read == ~= < > ) ; ,
+        "<operador_relacional> inválido", // esperado == ~= < >
+        "<aritmetica> inválido", // esperado identificador constante_int constante_float constante_string + - (
+        "<aritmetica_> inválido", // esperado identificador and do if or print read + - == ~= < > ) ; ,
+        "<termo> inválido", // esperado identificador constante_int constante_float constante_string + - (
+        "<termo_> inválido", // esperado identificador and do if or print read + - * / == ~= < > ) ; ,
+        "<fator> inválido", // esperado identificador constante_int constante_float constante_string + - (
+        "<fator_> inválido", // esperado identificador and count do elementof if or print read size + - * / == ~= < > ) ; ,
+        "<lista_instrucoes_> inválido", // esperado identificador bool do end float if int list print read string
+        "<comando_atribuicao_> inválido", // esperado = <-
+        "<comando_manipulacao_lista_> inválido", // esperado add delete
+        "<comando_intermediario_atr_mani> inválido", // esperado identificador 
+        "<comando_intermediario_atr_mani_> inválido", // esperado add delete = <-
+        "<lista_id_> inválido", // esperado ; ,
+        "<lista_entrada_> inválido", // esperado ) ,
+        "<lista_expressoes_> inválido", // esperado ) ,
+        "<lista_comandos_> inválido" // esperado identificador do else end if print read until 
     };
 }

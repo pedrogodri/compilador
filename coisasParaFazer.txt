@@ -1,0 +1,2 @@
+1 - ver ParserConstants se esta correto
+2 - alterar posição do sintantico e semantico para representar a linha

@@ -9,9 +9,7 @@ import javax.swing.event.DocumentListener;
 import utils.gals.Lexico;
 import utils.gals.Semantico;
 import utils.gals.Sintatico;
-import utils.gals.exceptions.LexicalError;
-import utils.gals.exceptions.SemanticError;
-import utils.gals.exceptions.SyntaticError;
+import utils.gals.exceptions.*;
 
 public class Main extends JFrame {
 
@@ -420,10 +418,14 @@ public class Main extends JFrame {
             }
             // mensagem: programa compilado com sucesso - na área reservada para mensagens
             catch ( LexicalError e ) {
-                // tratar erros léxicos, conforme especificação da parte 2 - analisador léxico
-            }
+                if (e instanceof SimboloInvalidoError simError)
+                    mostrarMensagem("Lexico - linha " + simError.getPosition() + ": " + simError.getCaracter() + " " 
+                    + simError.getMessage());
+                else
+                    mostrarMensagem("Lexico - linha " + e.getPosition() + ": " + e.getMessage());
+                }
             catch ( SyntaticError e ) {
-                mostrarMensagem(e.getMessage() + " em " + e.getPosition());
+                mostrarMensagem("Sintatico - linha " + e.getPosition() + ": "  + e.getEncontrado() + " " + e.getMessage());
 
                 // e.getMessage() são os símbolos esperados
                 // e.getMessage() - retorna a mensagem de erro de PARSER_ERROR (ver ParserConstants.java)

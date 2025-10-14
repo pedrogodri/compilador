@@ -1,6 +1,7 @@
 package utils.gals;
 
 import utils.gals.exceptions.LexicalError;
+import utils.gals.exceptions.SimboloInvalidoError;
 
 public class Lexico implements Constants
 {
@@ -59,8 +60,15 @@ public class Lexico implements Constants
                 }
             }
         }
-        if (endState < 0 || (endState != state && tokenForState(lastState) == -2))
-            throw new LexicalError(SCANNER_ERROR[lastState], start);
+        
+        if (endState < 0 || (endState != state && tokenForState(lastState) == -2)) {
+            String textError = SCANNER_ERROR[lastState];
+
+            if (textError.contains("símbolo inválido"))
+                throw new SimboloInvalidoError(textError, startLine, input.charAt(position-1));
+            else
+                throw new LexicalError(textError, startLine);
+        }
 
         position = end;
 
