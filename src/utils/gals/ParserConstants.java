@@ -183,46 +183,46 @@ public interface ParserConstants
         "esperado )",
         "esperado ;",
         "esperado ,",
-        "<programa> inválido", // esperado begin
-        "<lista_instrucoes> inválido", // esperado identificador bool float int string list if do print read
-        "<instrucao> inválido", // esperado identificador bool do float if int list print read string 
-        "<comando> inválido", // esperado identificador do if print read 
-        "<dec_variavel> inválido", // esperado bool float int list string 
-        "<comando_entrada_dados> inválido", // esperado read
-        "<comando_saida_dados> inválido", // esperado print
-        "<comando_selecao> inválido", // esperado if
-        "<comando_repeticao> inválido", // esperado do
-        "<tipo> inválido", // esperado bool float int list string
-        "<lista_id> inválido", // esperado identificador 
-        "<tipo_simples> inválido", // esperado bool float int string | tipo
-        "<lista_tipo> inválido", // esperado list | tipo
-        "<expressao> inválido", // esperado identificador constante_int constante_float constante_string false not true + - (
-        "<elemento> inválido", // esperado identificador constante_int constante_float constante_string false not true + -(
-        "<posicao> inválido", // esperado identificador constante_int constante_float constante_string false not true + - (
-        "<lista_entrada> inválido", // identificador constante_string 
-        "<string_read> inválido", // esperado identificador constante_string 
-        "<lista_expressoes> inválido", // esperado identificador constante_int constante_float constante_string false not true + - (
-        "<lista_comandos> inválido", // esperado identificador do if print read
-        "<else> inválido", // esperado else end
-        "<expressao_> inválido", // esperado identificador and do if or print read ) ; ,
-        "<valor> inválido", // esperado identificador constante_int constante_float constante_string false list true + - (
-        "<relacional> inválido", // esperado identificador constante_int constante_float constante_string + - (
-        "<relacional_> inválido", // esperado identificador and do if or print read == ~= < > ) ; ,
-        "<operador_relacional> inválido", // esperado == ~= < >
-        "<aritmetica> inválido", // esperado identificador constante_int constante_float constante_string + - (
-        "<aritmetica_> inválido", // esperado identificador and do if or print read + - == ~= < > ) ; ,
-        "<termo> inválido", // esperado identificador constante_int constante_float constante_string + - (
-        "<termo_> inválido", // esperado identificador and do if or print read + - * / == ~= < > ) ; ,
-        "<fator> inválido", // esperado identificador constante_int constante_float constante_string + - (
-        "<fator_> inválido", // esperado identificador and count do elementof if or print read size + - * / == ~= < > ) ; ,
-        "<lista_instrucoes_> inválido", // esperado identificador bool do end float if int list print read string
-        "<comando_atribuicao_> inválido", // esperado = <-
-        "<comando_manipulacao_lista_> inválido", // esperado add delete
-        "<comando_intermediario_atr_mani> inválido", // esperado identificador 
-        "<comando_intermediario_atr_mani_> inválido", // esperado add delete = <-
-        "<lista_id_> inválido", // esperado ; ,
-        "<lista_entrada_> inválido", // esperado ) ,
-        "<lista_expressoes_> inválido", // esperado ) ,
-        "<lista_comandos_> inválido" // esperado identificador do else end if print read until 
+        "esperado begin", // <programa> inválido
+        "esperado identificador bool float int string list if do print read", // <lista_instrucoes> inválido
+        "esperado identificador bool do float if int list print read string", // <instrucao> inválido
+        "esperado identificador do if print read", // <comando> inválido
+        "esperado bool float int list string", // <dec_variavel> inválido
+        "esperado read", // <comando_entrada_dados> inválido
+        "esperado print", // <comando_saida_dados> inválido
+        "esperado if", // <comando_selecao> inválido
+        "esperado do", // <comando_repeticao> inválido
+        "esperado bool float int list string", // <tipo> inválido
+        "esperado identificador", // <lista_id> inválido
+        "esperado bool float int string | tipo", // <tipo_simples> inválido
+        "esperado list | tipo", // <lista_tipo> inválido
+        "esperado identificador constante_int constante_float constante_string false not true + - (", // <expressao> inválido
+        "esperado identificador constante_int constante_float constante_string false not true + -(", // <elemento> inválido
+        "esperado identificador constante_int constante_float constante_string false not true + - (", // <posicao> inválido
+        "esperado identificador constante_string", // <lista_entrada> inválido
+        "esperado identificador constante_string", // <string_read> inválido
+        "esperado identificador constante_int constante_float constante_string false not true + - (", // <lista_expressoes> inválido
+        "esperado identificador do if print read", // <lista_comandos> inválido
+        "esperado else end", // <else> inválido
+        "esperado identificador and do if or print read ) ; ,", // <expressao_> inválido
+        "esperado identificador constante_int constante_float constante_string false list true + - (", // <valor> inválido
+        "esperado identificador constante_int constante_float constante_string + - (", // <relacional> inválido
+        "esperado identificador and do if or print read == ~= < > ) ; ,", // <relacional_> inválido
+        "esperado == ~= < >", // <operador_relacional> inválido
+        "esperado identificador constante_int constante_float constante_string + - (", // <aritmetica> inválido
+        "esperado identificador and do if or print read + - == ~= < > ) ; ,", // <aritmetica_> inválido
+        "esperado identificador constante_int constante_float constante_string + - (", // <termo> inválido
+        "esperado identificador and do if or print read + - * / == ~= < > ) ; ,", // <termo_> inválido
+        "esperado identificador constante_int constante_float constante_string + - (", // <fator> inválido
+        "esperado identificador and count do elementof if or print read size + - * / == ~= < > ) ; ,", // <fator_> inválido
+        "esperado identificador bool do end float if int list print read string", // <lista_instrucoes_> inválido
+        "esperado = <-", // <comando_atribuicao_> inválido
+        "esperado add delete", // <comando_manipulacao_lista_> inválido
+        "esperado identificador", // <comando_intermediario_atr_mani> inválido
+        "esperado add delete = <-", // <comando_intermediario_atr_mani_> inválido
+        "esperado ; ,", // <lista_id_> inválido
+        "esperado ) ,", // <lista_entrada_> inválido
+        "esperado ) ,", // <lista_expressoes_> inválido
+        "esperado identificador do else end if print read until" // <lista_comandos_> inválido
     };
 }

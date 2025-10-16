@@ -6,6 +6,7 @@ import java.io.*;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.undo.UndoManager;
 import utils.gals.Lexico;
 import utils.gals.Semantico;
 import utils.gals.Sintatico;
@@ -31,6 +32,8 @@ public class Main extends JFrame {
     private JButton btnRecortar;
     private JButton btnCompilar;
     private JButton btnEquipe;
+    private JButton btnDesfazer;
+    private JButton btnRefazer;
     private JToolBar toolBar;
 
     private class EditorTab {
@@ -40,6 +43,7 @@ public class Main extends JFrame {
         File arquivoAtual;
         int fontSize;
         boolean alterado = false;
+        UndoManager undoManager;
 
         EditorTab(int fontSize) {
             this.fontSize = fontSize;
@@ -54,6 +58,9 @@ public class Main extends JFrame {
             mensagensArea.setEditable(false);
             mensagensArea.setBackground(new Color(240, 240, 240));
             mensagensArea.setFont(new Font("Monospaced", Font.PLAIN, 13));
+
+            undoManager = new UndoManager();
+            textArea.getDocument().addUndoableEditListener(undoManager);
         }
     }
 
@@ -126,11 +133,6 @@ public class Main extends JFrame {
         toolBar.add(btnRecortar);
 
         btnCompilar = new JButton("Compilar [F7]");
-        btnCompilar.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-                acaoCompilar();
-        	}
-        });
         btnCompilar.setIcon(new ImageIcon(Main.class.getResource("/assets/icons/play.png")));
         btnCompilar.setPreferredSize(new Dimension(160, 50));
         btnCompilar.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -143,6 +145,20 @@ public class Main extends JFrame {
         btnEquipe.setHorizontalTextPosition(SwingConstants.CENTER);
         btnEquipe.setVerticalTextPosition(SwingConstants.BOTTOM);
         toolBar.add(btnEquipe);
+
+        btnDesfazer = new JButton("Desfazer [Ctrl+Z]");
+        btnDesfazer.setIcon(new ImageIcon(Main.class.getResource("/assets/icons/undo.png")));
+        btnDesfazer.setPreferredSize(new Dimension(160, 50));
+        btnDesfazer.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnDesfazer.setVerticalTextPosition(SwingConstants.BOTTOM);
+        toolBar.add(btnDesfazer);
+
+        btnRefazer = new JButton("Refazer [Ctrl+Y]");
+        btnRefazer.setIcon(new ImageIcon(Main.class.getResource("/assets/icons/redo.png")));
+        btnRefazer.setPreferredSize(new Dimension(160, 50));
+        btnRefazer.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnRefazer.setVerticalTextPosition(SwingConstants.BOTTOM);
+        toolBar.add(btnRefazer);
 
         Dimension btnSize = new Dimension(110, 65);
 
@@ -178,6 +194,14 @@ public class Main extends JFrame {
         btnEquipe.setMinimumSize(btnSize);
         btnEquipe.setMaximumSize(btnSize);
 
+        btnDesfazer.setPreferredSize(btnSize);
+        btnDesfazer.setMinimumSize(btnSize);
+        btnDesfazer.setMaximumSize(btnSize);
+
+        btnRefazer.setPreferredSize(btnSize);
+        btnRefazer.setMinimumSize(btnSize);
+        btnRefazer.setMaximumSize(btnSize);
+
         tabbedPane = new JTabbedPane();
         contentPane.add(tabbedPane, BorderLayout.CENTER);
 
@@ -197,7 +221,10 @@ public class Main extends JFrame {
         btnCopiar.addActionListener(e -> getEditorAtual().textArea.copy());
         btnColar.addActionListener(e -> getEditorAtual().textArea.paste());
         btnRecortar.addActionListener(e -> getEditorAtual().textArea.cut());
+        btnCompilar.addActionListener(e -> acaoCompilar());
         btnEquipe.addActionListener(e -> mostrarMensagem("Equipe: Gabriel Bugmann Vansuita, Pedro Henrique Godri, Yasmin Victória Alves de Souza."));
+        btnDesfazer.addActionListener(e -> acaoDesfazer());
+        btnRefazer.addActionListener(e -> acaoRefazer());
 
         tabbedPane.addChangeListener(e -> {
             if (tabbedPane.getSelectedComponent() != null) {
@@ -236,6 +263,10 @@ public class Main extends JFrame {
                 this::diminuirZoom);
 
         addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK), "darkMode", this::alternarDarkMode);
+
+        addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK), "desfazer", this::acaoDesfazer);
+
+        addAtalho(KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.CTRL_DOWN_MASK), "refazer", this::acaoRefazer);
     }
 
     private void addAtalho(KeyStroke keyStroke, String nome, Runnable acao) {
@@ -246,6 +277,18 @@ public class Main extends JFrame {
                 acao.run();
             }
         });
+    }
+
+    private void acaoDesfazer() {
+        EditorTab editor = getEditorAtual();
+        if (editor.undoManager.canUndo())
+            editor.undoManager.undo();
+    }
+
+    private void acaoRefazer() {
+        EditorTab editor = getEditorAtual();
+        if (editor.undoManager.canRedo())
+            editor.undoManager.redo();
     }
 
     private void acaoNovo() {
