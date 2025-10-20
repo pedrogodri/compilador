@@ -462,13 +462,13 @@ public class Main extends JFrame {
             // mensagem: programa compilado com sucesso - na área reservada para mensagens
             catch ( LexicalError e ) {
                 if (e instanceof SimboloInvalidoError simError)
-                    mostrarMensagem("Lexico - linha " + simError.getPosition() + ": " + simError.getCaracter() + " " 
+                    mostrarMensagem("Linha " + simError.getPosition() + ": " + simError.getCaracter() + " " 
                     + simError.getMessage());
                 else
-                    mostrarMensagem("Lexico - linha " + e.getPosition() + ": " + e.getMessage());
+                    mostrarMensagem("Linha " + e.getPosition() + ": " + e.getMessage());
                 }
             catch ( SyntaticError e ) {
-                mostrarMensagem("Sintatico - linha " + e.getPosition() + ": "  + e.getEncontrado() + " " + e.getMessage());
+                mostrarMensagem("Linha " + e.getPosition() + ": "  + e.getEncontrado() + " " + e.getMessage());
 
                 // e.getMessage() são os símbolos esperados
                 // e.getMessage() - retorna a mensagem de erro de PARSER_ERROR (ver ParserConstants.java)
