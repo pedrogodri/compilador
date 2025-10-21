@@ -1,2 +1,3 @@
-1 - ver ParserConstants se esta correto
-2 - alterar posição do sintantico e semantico para representar a linha
+1 - arrumar comentarios arquivo ParserConstants;
+2 - arrumar para strings aparecem somente como "constante_string";
+3 - revisar ParserConstants;

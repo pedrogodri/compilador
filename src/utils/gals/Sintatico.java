@@ -32,9 +32,9 @@ public class Sintatico implements Constants
         {
             int pos = 0;
             if (previousToken != null)
-                pos = previousToken.getPosition()+previousToken.getLexeme().length();
+                pos = previousToken.getPosition();
 
-            currentToken = new Token(DOLLAR, "$", pos);
+            currentToken = new Token(DOLLAR, "EOF", pos);
         }
 
         int x = ((Integer)stack.pop()).intValue();
