@@ -140,49 +140,49 @@ public interface ParserConstants
 
     String[] PARSER_ERROR =
     {
-        "",
-        "esperado EOF",
-        "esperado identificador",
-        "esperado constante_int",
-        "esperado constante_float",
-        "esperado constante_string",
-        "esperado add",
-        "esperado and",
-        "esperado begin",
-        "esperado bool",
-        "esperado count",
-        "esperado delete",
-        "esperado do",
-        "esperado elementof",
-        "esperado else",
-        "esperado end",
-        "esperado false",
-        "esperado float",
-        "esperado if",
-        "esperado int",
-        "esperado list",
-        "esperado not",
-        "esperado or",
-        "esperado print",
-        "esperado read",
-        "esperado size",
-        "esperado string",
-        "esperado true",
-        "esperado until",
-        "esperado +",
-        "esperado -",
-        "esperado *",
-        "esperado /",
-        "esperado ==",
-        "esperado ~=",
-        "esperado <",
-        "esperado >",
-        "esperado =",
-        "esperado <-",
-        "esperado (",
-        "esperado )",
-        "esperado ;",
-        "esperado ,",
+        "", // Era esperado fim de programa
+        "esperado EOF", // Era esperado fim de programa
+        "esperado identificador", // Era esperado identificador
+        "esperado constante_int", // Era esperado cint
+        "esperado constante_float", // Era esperado cfloat
+        "esperado constante_string", // Era esperado cstring
+        "esperado add", // Era esperado pr_add
+        "esperado and", // Era esperado pr_and
+        "esperado begin", // Era esperado pr_begin
+        "esperado bool", // Era esperado pr_bool
+        "esperado count", // Era esperado pr_count
+        "esperado delete", // Era esperado pr_delete
+        "esperado do", // Era esperado pr_do
+        "esperado elementof", // Era esperado pr_elementof
+        "esperado else", // Era esperado pr_else
+        "esperado end", // Era esperado pr_end
+        "esperado false", // Era esperado pr_false
+        "esperado float", // Era esperado pr_float
+        "esperado if", // Era esperado pr_if
+        "esperado int", // Era esperado pr_int
+        "esperado list", // Era esperado pr_list
+        "esperado not", // Era esperado pr_not
+        "esperado or", // Era esperado pr_or
+        "esperado print", // Era esperado pr_print
+        "esperado read", // Era esperado pr_read
+        "esperado size", // Era esperado pr_size
+        "esperado string", // Era esperado pr_string
+        "esperado true", // Era esperado pr_true
+        "esperado until", // Era esperado pr_until
+        "esperado +", // Era esperado +
+        "esperado -", // Era esperado -
+        "esperado *", // Era esperado *
+        "esperado /", // Era esperado /
+        "esperado ==", // Era esperado ==
+        "esperado ~=", // Era esperado ~=
+        "esperado <", // Era esperado <
+        "esperado >", // Era esperado >
+        "esperado =", // Era esperado =
+        "esperado <-", // Era esperado <-
+        "esperado (", // Era esperado (
+        "esperado )", // Era esperado )
+        "esperado ;", // Era esperado ;
+        "esperado ,", // Era esperado ,
         "esperado begin", // <programa> inválido
         "esperado identificador tipo if do print read", // <lista_instrucoes> inválido
         "esperado identificador tipo do print if read", // <instrucao> inválido

@@ -406,78 +406,30 @@ public class Main extends JFrame {
     }
 
     /**
-     * Realiza a compilação lexica da aba atual 
+     * Realiza a compilação da aba atual 
      */
     private void acaoCompilar() {
-        // Lexico lexico = new Lexico();
-        // System.out.println(getEditorAtual().textArea.getLineCount());
-        // lexico.setInput(getEditorAtual().textArea.getText());
-        // try {
-        //     Token t = null;
-        //     String texto = String.format("%-10s %-20s %-10s%n","Linha", "Classe", "Lexema");
-
-        //     while ( (t = lexico.nextToken()) != null ) {
-        //     texto += String.format("%-10s %-20s %-10s%n", t.getPosition(), 
-        //         Constants.TOKEN_NAMES.getOrDefault(t.getId(), "Token desconhecido"), t.getLexeme());
-            
-                // só escreve o lexema, necessário escrever t.getId, t.getPosition()
-        
-                // t.getId () - retorna o identificador da classe (ver Constants.java) 
-                // necessário adaptar, pois deve ser apresentada a classe por extenso
-            
-                // t.getPosition () - retorna a posição inicial do lexema no editor 
-                // necessário adaptar para mostrar a linha	
-
-                // esse código apresenta os tokens enquanto não ocorrer erro
-                // no entanto, os tokens devem ser apresentados SÓ se não ocorrer erro,
-                // necessário adaptar para atender o que foi solicitado		   
-            // }
-            
-        //     texto += "\nprograma compilado com sucesso";
-        //     mostrarMensagem(texto);
-        // }
-        // catch (AnalysisError error) {  // tratamento de erros
-        //     if (error instanceof SimboloInvalidoError simError)
-        //         mostrarMensagem("linha " + simError.getPosition() + ": " + simError.getCaracter() + " " 
-        //         + simError.getMessage());
-        //     else
-        //         mostrarMensagem("linha " + error.getPosition() + ": " + error.getMessage());
-        
-            // e.getMessage() - retorna a mensagem de erro de SCANNER_ERRO (ver ScannerConstants.java)
-            // necessário adaptar conforme o enunciado da parte 2
-        
-            // e.getPosition() - retorna a posição inicial do erro 
-            // necessário adaptar para mostrar a linha  
-        // }
-
             Lexico lexico = new Lexico();
             Sintatico sintatico = new Sintatico();
             Semantico semantico = new Semantico();
             lexico.setInput(getEditorAtual().textArea.getText());
             
             try {
-                sintatico.parse(lexico, semantico);    // tradução dirigida pela sintaxe
+                // tradução dirigida pela sintaxe
+                sintatico.parse(lexico, semantico);
                 mostrarMensagem("programa compilado com sucesso");
             }
-            // mensagem: programa compilado com sucesso - na área reservada para mensagens
             catch ( LexicalError e ) {
                 if (e instanceof SimboloInvalidoError simError)
                     mostrarMensagem("linha " + simError.getPosition() + ": " + simError.getCaracter() + " " 
                     + simError.getMessage());
                 else
                     mostrarMensagem("linha " + e.getPosition() + ": " + e.getMessage());
-                }
+            }
             catch ( SyntaticError e ) {
-                mostrarMensagem("linha " + e.getPosition() + ": "  + e.getEncontrado() + " " + e.getMessage());
-
-                // e.getMessage() são os símbolos esperados
-                // e.getMessage() - retorna a mensagem de erro de PARSER_ERROR (ver ParserConstants.java)
-                // necessário adaptar conforme o enunciado da parte 3
-                
-                // e.getPosition() - retorna a posição inicial do erro 
-                // necessário adaptar para mostrar a linha  
-                        
-                // necessário mostrar também o símbolo encontrado 
+                mostrarMensagem("linha " + e.getPosition() + ": "  +
+                    e.getEncontrado().replaceAll("\"[^\"]*\"", "constante_string") + " " + e.getMessage()
+                );
             }
             catch ( SemanticError e ) {
                 // trata erros semânticos na parte 4
