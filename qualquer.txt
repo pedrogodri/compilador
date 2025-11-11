@@ -1,67 +1,52 @@
-1a/2a PARTE da aula: IMPLEMENTAÇÃO
-1) alterar especificação léxica e sintática conforme correção do trabalho no.3
+// 1o passo: implementar acoes #100 - #105
+//
+// 2o passo: editar programa e salvar com o nome teste01.txt
+// 
+// begin
+//  print (9, 3.5, "oi");
+// end
+//
+// 3o passo: compilar programa, deve ser gerado arquivo teste01.il
 
-2) verificar opções (em Ferramentas > Opções): 
-   2.1 aba GERAL
-       -> selecionar Analisador Léxico e Sintático, escolher linguagem
 
-  2.2 aba LÉXICO
-      -> Forma de Entrada: String
-      -> Implementação do Autômato: Tabela Compactada 
-	  -> Diferenciar maiúsculas/minúsculas ...
+public class Semantico implements Constants
+{
+    pilha_tipos: Pilha
+    codigo      : String
 
-  2.3 aba SINTÁTICO
-      -> Classe do analisador sintático: LL(1)
+    public void executeAction(int action, Token token)	throws SemanticError
+    {
+        escolha action
+	  100: acao100
+	  101: acao101
+	  102: acao102
+	  103: acao103 (token)
+	  104: acao104 (token)
+	  105: acao105 (token)
+	fim
+        //System.out.println("Ação #"+action+", Token: "+token);
+    }	
 
-3) gerar código (em Ferramentas > Gerar Código): escolher pasta, gerar todos os arquivos
+    método acao100 () { //formatar
+      codigo.adiciona (".assembly extern mscorlib {}" +
+                       ".assembly _programa{}" +
+                       ".module _programa.exe" +
+                       "" +
+                       ".class public _unica{" +
+                       ".method static public void _principal(){" +
+                       ".entrypoint")
+    }
 
-4) para usar o código gerado, deve ser chamado a partir da ação associada ao botão compilar	
-	
-TROCAR:
-	
-   Lexico lexico = new Lexico();
-   lexico.setInput( /* entrada */ );
-   try {
-      Token t = null;
-      while ( (t = lexico.nextToken()) != null ) {
-         System.out.println(t.getLexeme());
-		 // código implementado pela equipe para atender o que
-		 // foi solicitado na implementação do analisador léxico 
-      }
-   }
-   catch ( LexicalError e ) { // tratamento de erros
-      System.out.println(e.getMessage() + " em " + e.getPosition());
-      
-	  // código implementado pela equipe para atender o que
-      // foi solicitado na implementação do analisador léxico 	  
-   }
-	
-	
-POR:
-	
-   Lexico lexico = new Lexico();
-   Sintatico sintatico = new Sintatico();
-   Semantico semantico = new Semantico();
-   lexico.setInput( /*  texto do editor de textos */ );
-   try {
-      sintatico.parse(lexico, semantico);    // tradução dirigida pela sintaxe
-   }
-   // mensagem: programa compilado com sucesso - na área reservada para mensagens
-   catch ( LexicalError e ) {
-      // tratar erros léxicos, conforme especificação da parte 2 - analisador léxico
-   }
-   catch ( SyntaticError e ) {
-      System.out.println(e.getMessage() + " em " + e.getPosition());
+    método acao103 (Token token) {
+        pilha_tipos.empilha("int64")
+        codigo.adiciona ("ldc.i8 " + token.getLexeme)
+        codigo.adiciona ("conv.r8")
+    }
 
-      // e.getMessage() são os símbolos esperados
-      // e.getMessage() - retorna a mensagem de erro de PARSER_ERROR (ver ParserConstants.java)
-      // necessário adaptar conforme o enunciado da parte 3
-    
-      // e.getPosition() - retorna a posição inicial do erro 
-      // necessário adaptar para mostrar a linha  
-			 
-      // necessário mostrar também o símbolo encontrado 
-   }
-   catch ( SemanticError e ) {
-      // trata erros semânticos na parte 4
-   }
+    método acao101 () {
+      codigo.adiciona ("ret"+
+                       "}" +
+                       "}")
+    }
+
+}
