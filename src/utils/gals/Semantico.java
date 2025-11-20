@@ -16,13 +16,12 @@ public class Semantico implements Constants
 
     // controle de rotulos
     private Stack<String> pilha_rotulos = new Stack<>();
-    private int contadorRotulos = 0;
+    private int contadorRotulos = 1;
 
     // declaração de variavel
     private String tipo_declarado;
     private List<String> lista_identificadores = new ArrayList<>();
     private Map<String, String> tabela_simbolos = new HashMap<>();
-    private List<String> lista_locals = new ArrayList<>();
 
     private String novoRotulo() {
         return "L" + (contadorRotulos++);
@@ -79,13 +78,13 @@ public class Semantico implements Constants
                                 ".module _programa.exe\n" +
                                 "\n" +
                                 ".class public _unica{\n" +
-                                ".method static public void _principal(){\n" +
-                                ".entrypoint\n");
+                                "\t.method static public void _principal(){\n" +
+                                "\t.entrypoint\n\n");
     }
 
     /// comando para finalizar projeto
     private void acao101() {
-        codigo = codigo.concat("ret\n"+
+        codigo = codigo.concat("\nret\n"+
                                 "}\n" +
                                 "}\n");
     }
@@ -249,8 +248,8 @@ public class Semantico implements Constants
 
     /// comando para escrever quebra de linha na saída padrão
     private void acao118() {
-        codigo = codigo.concat("ldstr \"\n\"");
-        codigo = codigo.concat("call void [mscorlib]System.Console::Write(string)");
+        codigo = codigo.concat("ldstr \"\\n\"\n");
+        codigo = codigo.concat("call void [mscorlib]System.Console::Write(string)\n");
     }
 
     /// comando para adicionar ao locals
@@ -261,7 +260,7 @@ public class Semantico implements Constants
             tabela_simbolos.put(id, tipo_declarado);
 
             // Gera o código objeto de declaração (.locals)
-            codigo = codigo.concat("\t.locals (" + tipo_declarado + " " + id + ")\n");
+            codigo = codigo.concat(".locals (" + tipo_declarado + " " + id + ")\n");
         }
 
         // Limpa a lista de ids usados na declaração
@@ -300,7 +299,7 @@ public class Semantico implements Constants
         String id = lista_identificadores.get(0);
 
         // Gera código IL da atribuição
-        codigo = codigo.concat("\tstloc " + id + "\n");
+        codigo = codigo.concat("stloc " + id + "\n");
 
         // Limpa lista
         lista_identificadores.clear();
@@ -322,20 +321,20 @@ public class Semantico implements Constants
         }
 
         // Gera leitura básica: ReadLine()
-        codigo = codigo.concat("\tcall string [mscorlib]System.Console::ReadLine()\n");
+        codigo = codigo.concat("call string [mscorlib]System.Console::ReadLine()\n");
 
         // Conversões conforme tipo
         switch (tipoId) {
             case ITipo.INT -> 
-                codigo = codigo.concat("\tcall int64 [mscorlib]System.Int64::Parse(string)\n");
+                codigo = codigo.concat("call int64 [mscorlib]System.Int64::Parse(string)\n");
             case ITipo.FLOAT ->
-                codigo = codigo.concat("\tcall float64 [mscorlib]System.Double::Parse(string)\n");
+                codigo = codigo.concat("call float64 [mscorlib]System.Double::Parse(string)\n");
             case ITipo.STRING -> { /* nada: ReadLine já retorna string */ }
             default -> {}
         }
 
         // Armazena o valor lido
-        codigo = codigo.concat("\tstloc " + id + "\n");
+        codigo = codigo.concat("stloc " + id + "\n");
     }
 
     /// comando para escrever constante string
