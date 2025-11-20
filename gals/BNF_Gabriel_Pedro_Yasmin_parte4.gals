@@ -129,59 +129,59 @@ pr_until = identificador: "until"
 <comando> ::= <comando_intermediario_atr_mani> | <comando_entrada_dados> | <comando_saida_dados> | <comando_selecao> | <comando_repeticao> ;
 
 
-<dec_variavel> ::= <tipo> <lista_id> ;
-<lista_id>::= identificador <lista_id_> ;
+<dec_variavel> ::= <tipo> <lista_id> #119 ;
+<lista_id>::= identificador #121 <lista_id_> ;
 <lista_id_>::= î | "," <lista_id> ;
-<tipo_simples> ::= pr_bool | pr_int | pr_float | pr_string ;
+<tipo_simples> ::= pr_bool #120 | pr_int #120 | pr_float #120 | pr_string #120 ;
 <tipo> ::= <tipo_simples> | <lista_tipo> ;
 <lista_tipo> ::= pr_list "(" <tipo_simples> "," cint ")" ;
 
-<comando_atribuicao_> ::= "=" <expressao> | "<-" <expressao> ;
+<comando_atribuicao_> ::= "=" <expressao> #122 | "<-" <expressao> #122 ;
 
 <comando_manipulacao_lista_> ::= pr_add "(" <elemento> "," <posicao> ")" | pr_delete "(" <posicao> ")" ;
 
-<comando_intermediario_atr_mani> ::= identificador <comando_intermediario_atr_mani_> ;
+<comando_intermediario_atr_mani> ::= identificador #121 <comando_intermediario_atr_mani_> ;
 <comando_intermediario_atr_mani_> ::= <comando_manipulacao_lista_> | <comando_atribuicao_> ;
 
 <elemento> ::= <expressao> ;
 <posicao> ::= <expressao> ;
 
 <comando_entrada_dados> ::= pr_read "(" <lista_entrada> ")" ;
-<lista_entrada> ::= <string_read> identificador <lista_entrada_> ;
+<lista_entrada> ::= <string_read> identificador #123 <lista_entrada_> ;
 <lista_entrada_> ::= î | "," <lista_entrada> ;
-<string_read> ::= cstring "," | î ;
+<string_read> ::= cstring #124 "," | î ;
 
-<comando_saida_dados> ::= pr_print "(" <lista_expressoes> ")" ;
+<comando_saida_dados> ::= pr_print "(" <lista_expressoes> ")" #118 ;
 <lista_expressoes> ::= <expressao> #102 <lista_expressoes_> ;
 <lista_expressoes_> ::= î | "," <lista_expressoes> ;
 
 
-<comando_selecao> ::= pr_if <expressao> <lista_comandos> <else> pr_end ;
+<comando_selecao> ::= pr_if <expressao> #125 <lista_comandos> <else> pr_end #126 ;
 <lista_comandos> ::= <comando> ";" <lista_comandos_> ;
 <lista_comandos_> ::= î | <lista_comandos> ;
-<else> ::= pr_else <lista_comandos> | î ;
+<else> ::= pr_else #127 <lista_comandos> | î ;
 
-<comando_repeticao> ::= pr_do <lista_comandos> pr_until <expressao> ;
+<comando_repeticao> ::= pr_do #128 <lista_comandos> pr_until <expressao> #129 ;
 
 
 
 
 <expressao> ::= <valor> <expressao_> ; 
-<expressao_> ::= î | pr_and <valor> <expressao_> | pr_or <valor> <expressao_> ; 
-<valor> ::= <relacional> | pr_true | pr_false | pr_not <valor> ; 
+<expressao_> ::= î | pr_and <valor> #113 <expressao_> | pr_or <valor> #114 <expressao_> ; 
+<valor> ::= <relacional> | pr_true #115 | pr_false #116 | pr_not <valor> #117 ; 
 <relacional> ::= <aritmetica> <relacional_> ; 
-<relacional_> ::= î | <operador_relacional> <aritmetica> ; 
+<relacional_> ::= î | <operador_relacional> #111 <aritmetica> #112 ; 
 <operador_relacional>::= "==" | "~=" | "<" | ">" ; 
 <aritmetica> ::= <termo> <aritmetica_> ; 
-<aritmetica_> ::= î | "+" <termo> <aritmetica_> | "-" <termo> <aritmetica_> ; 
+<aritmetica_> ::= î | "+" <termo> #106 <aritmetica_> | "-" <termo> #107 <aritmetica_> ; 
 <termo> ::= <fator> <termo_> ; 
-<termo_> ::= î | "*" <fator> <termo_> | "/" <fator> <termo_> ; 
-<fator> ::= identificador <fator_> | 
+<termo_> ::= î | "*" <fator> #108 <termo_> | "/" <fator> #109 <termo_> ; 
+<fator> ::= identificador #130 <fator_> | 
  cint #103 | 
  cfloat #104 | 
  cstring #105 | 
  "(" <expressao> ")" | 
  "+" <fator> | 
- "-" <fator> ; 
+ "-" <fator> #110 ; 
 <fator_> ::= î | pr_count | pr_size | pr_elementof "(" <expressao> ")" ;
 

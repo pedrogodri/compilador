@@ -409,31 +409,54 @@ public class Main extends JFrame {
      * Realiza a compilação da aba atual 
      */
     private void acaoCompilar() {
-            Lexico lexico = new Lexico();
-            Sintatico sintatico = new Sintatico();
-            Semantico semantico = new Semantico();
-            lexico.setInput(getEditorAtual().textArea.getText());
+        EditorTab editor = getEditorAtual();
+
+        // Verifica se o arquivo já foi salvo
+        if (editor.arquivoAtual == null) {
+            mostrarMensagem("Erro: salve o arquivo antes de compilar");
+            return;
+        }
+        
+        Lexico lexico = new Lexico();
+        Sintatico sintatico = new Sintatico();
+        Semantico semantico = new Semantico();
+        lexico.setInput(editor.textArea.getText());
+        
+        try {
+            // tradução dirigida pela sintaxe
+            sintatico.parse(lexico, semantico);
+
+            // Obtém o código IL gerado
+            String codigoIL = semantico.getCodigo();
             
-            try {
-                // tradução dirigida pela sintaxe
-                sintatico.parse(lexico, semantico);
-                mostrarMensagem("programa compilado com sucesso");
+            // Determina o nome do arquivo .il (mesmo nome do .txt, mas com extensão .il)
+            String caminhoFonte = editor.arquivoAtual.getAbsolutePath();
+            String caminhoIL = caminhoFonte.substring(0, caminhoFonte.lastIndexOf('.')) + ".il";
+
+            // Gera o arquivo .il
+            File arquivoIL = new File(caminhoIL);
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivoIL))) {
+                writer.write(codigoIL);
+                mostrarMensagem("Programa compilado com sucesso.\nArquivo gerado: " + arquivoIL.getName());
+            } catch (IOException ex) {
+                mostrarMensagem("Erro ao gerar arquivo .il: " + ex.getMessage());
             }
-            catch ( LexicalError e ) {
-                if (e instanceof SimboloInvalidoError simError)
-                    mostrarMensagem("linha " + simError.getPosition() + ": " + simError.getCaracter() + " " 
-                    + simError.getMessage());
-                else
-                    mostrarMensagem("linha " + e.getPosition() + ": " + e.getMessage());
-            }
-            catch ( SyntaticError e ) {
-                mostrarMensagem("linha " + e.getPosition() + ": "  +
-                    e.getEncontrado().replaceAll("\"[^\"]*\"", "constante_string") + " " + e.getMessage()
-                );
-            }
-            catch ( SemanticError e ) {
-                // trata erros semânticos na parte 4
-            }
+        }
+        catch ( LexicalError e ) {
+            if (e instanceof SimboloInvalidoError simError)
+                mostrarMensagem("linha " + simError.getPosition() + ": " + simError.getCaracter() + " " 
+                + simError.getMessage());
+            else
+                mostrarMensagem("linha " + e.getPosition() + ": " + e.getMessage());
+        }
+        catch ( SyntaticError e ) {
+            mostrarMensagem("linha " + e.getPosition() + ": "  +
+                e.getEncontrado().replaceAll("\"[^\"]*\"", "constante_string") + " " + e.getMessage()
+            );
+        }
+        catch ( SemanticError e ) {
+            mostrarMensagem("linha " + e.getPosition() + ": "  + e.getMessage());
+        }
     }
 
     private void adicionarZoomScroll(JTextArea textArea) {

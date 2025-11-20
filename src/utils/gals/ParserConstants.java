@@ -65,73 +65,73 @@ public interface ParserConstants
         {  49 },
         {  50 },
         {  51 },
-        {  52,  53 },
-        {   2,  80 },
+        {  52,  53, 203 },
+        {   2, 205,  80 },
         {   0 },
         {  42,  53 },
-        {   9 },
-        {  19 },
-        {  17 },
-        {  26 },
+        {   9, 204 },
+        {  19, 204 },
+        {  17, 204 },
+        {  26, 204 },
         {  54 },
         {  55 },
         {  20,  39,  54,  42,   3,  40 },
-        {  37,  56 },
-        {  38,  56 },
+        {  37,  56, 206 },
+        {  38,  56, 206 },
         {   6,  39,  57,  42,  58,  40 },
         {  11,  39,  58,  40 },
-        {   2,  79 },
+        {   2, 205,  79 },
         {  77 },
         {  76 },
         {  56 },
         {  56 },
         {  24,  39,  59,  40 },
-        {  60,   2,  81 },
+        {  60,   2, 207,  81 },
         {   0 },
         {  42,  59 },
-        {   5,  42 },
+        {   5, 208,  42 },
         {   0 },
-        {  23,  39,  61,  40 },
+        {  23,  39,  61,  40, 202 },
         {  56, 186,  82 },
         {   0 },
         {  42,  61 },
-        {  18,  56,  62,  63,  15 },
+        {  18,  56, 209,  62,  63,  15, 210 },
         {  46,  41,  83 },
         {   0 },
         {  62 },
-        {  14,  62 },
+        {  14, 211,  62 },
         {   0 },
-        {  12,  62,  28,  56 },
+        {  12, 212,  62,  28,  56, 213 },
         {  65,  64 },
         {   0 },
-        {   7,  65,  64 },
-        {  22,  65,  64 },
+        {   7,  65, 197,  64 },
+        {  22,  65, 198,  64 },
         {  66 },
-        {  27 },
-        {  16 },
-        {  21,  65 },
+        {  27, 199 },
+        {  16, 200 },
+        {  21,  65, 201 },
         {  69,  67 },
         {   0 },
-        {  68,  69 },
+        {  68, 195,  69, 196 },
         {  33 },
         {  34 },
         {  35 },
         {  36 },
         {  71,  70 },
         {   0 },
-        {  29,  71,  70 },
-        {  30,  71,  70 },
+        {  29,  71, 190,  70 },
+        {  30,  71, 191,  70 },
         {  73,  72 },
         {   0 },
-        {  31,  73,  72 },
-        {  32,  73,  72 },
-        {   2,  74 },
+        {  31,  73, 192,  72 },
+        {  32,  73, 193,  72 },
+        {   2, 214,  74 },
         {   3, 187 },
         {   4, 188 },
         {   5, 189 },
         {  39,  56,  40 },
         {  29,  73 },
-        {  30,  73 },
+        {  30,  73, 194 },
         {   0 },
         {  10 },
         {  25 },
@@ -153,7 +153,7 @@ public interface ParserConstants
         "esperado count", // Era esperado pr_count
         "esperado delete", // Era esperado pr_delete
         "esperado do", // Era esperado pr_do
-        "esperado elementof", // Era esperado pr_elementof
+        "esperado elementOf", // Era esperado pr_elementof
         "esperado else", // Era esperado pr_else
         "esperado end", // Era esperado pr_end
         "esperado false", // Era esperado pr_false
@@ -196,25 +196,25 @@ public interface ParserConstants
         "esperado identificador", // <lista_id> inválido
         "esperado tipo primitivo", // <tipo_simples> inválido
         "esperado tipo", // <lista_tipo> inválido
-        "esperado identificador constante_int constante_float constante_string false not true + - (", // <expressao> inválido
+        "esperado expressão", // <expressao> inválido
         "esperado identificador constante_int constante_float constante_string false not true + -(", // <elemento> inválido
         "esperado identificador constante_int constante_float constante_string false not true + - (", // <posicao> inválido
         "esperado identificador constante_string", // <lista_entrada> inválido
         "esperado identificador constante_string", // <string_read> inválido
-        "esperado identificador constante_int constante_float constante_string false not true + - (", // <lista_expressoes> inválido
+        "esperado expressão", // <lista_expressoes> inválido
         "esperado identificador do if print read", // <lista_comandos> inválido
         "esperado else end", // <else> inválido
-        "esperado identificador and do if or print read ) ; ,", // <expressao_> inválido
-        "esperado identificador constante_int constante_float constante_string false list true + - (", // <valor> inválido
-        "esperado identificador constante_int constante_float constante_string + - (", // <relacional> inválido
-        "esperado identificador and do if or print read == ~= < > ) ; ,", // <relacional_> inválido
+        "esperado expressão", // <expressao_> inválido
+        "esperado expressão", // <valor> inválido
+        "esperado expressão", // <relacional> inválido
+        "esperado expressão", // <relacional_> inválido
         "esperado == ~= < >", // <operador_relacional> inválido
-        "esperado identificador constante_int constante_float constante_string + - (", // <aritmetica> inválido
-        "esperado identificador and do if or print read + - == ~= < > ) ; ,", // <aritmetica_> inválido
-        "esperado identificador constante_int constante_float constante_string + - (", // <termo> inválido
-        "esperado identificador and do if or print read + - * / == ~= < > ) ; ,", // <termo_> inválido
-        "esperado identificador constante_int constante_float constante_string + - (", // <fator> inválido
-        "esperado identificador and count do elementof if or print read size + - * / == ~= < > ) ; ,", // <fator_> inválido
+        "esperado expressão", // <aritmetica> inválido
+        "esperado expressão", // <aritmetica_> inválido
+        "esperado expressão", // <termo> inválido
+        "esperado expressão", // <termo_> inválido
+        "esperado expressão", // <fator> inválido
+        "esperado expressão", // <fator_> inválido
         "esperado identificador tipo do end if print read", // <lista_instrucoes_> inválido
         "esperado = <-", // <comando_atribuicao_> inválido
         "esperado add delete", // <comando_manipulacao_lista_> inválido
@@ -222,7 +222,7 @@ public interface ParserConstants
         "esperado add delete = <-", // <comando_intermediario_atr_mani_> inválido
         "esperado ; ,", // <lista_id_> inválido
         "esperado ) ,", // <lista_entrada_> inválido
-        "esperado ) ,", // <lista_expressoes_> inválido
+        "esperado expressão", // <lista_expressoes_> inválido
         "esperado identificador do else end if print read until" // <lista_comandos_> inválido
     };
 }
