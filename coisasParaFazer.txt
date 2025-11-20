@@ -1,0 +1,12 @@
+1 - bug ao tentar executar sem ter o variavel declarada
+
+begin 
+    int lado;
+    lado = 0;
+    do
+        print (true, "teste");
+        lado = lado_12 + 1;
+    until lado<10000;
+end
+
+lado_12 não esta declarado na tabela_simbolos por tanto deve ser feita uma verificação

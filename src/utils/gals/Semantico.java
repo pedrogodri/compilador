@@ -428,22 +428,9 @@ public class Semantico implements Constants
 
         // Recupera o rótulo do início do laço (criado na #128)
         String rotulo = pilha_rotulos.pop();
-
-        // CORRIGIDO: Se falso → sai do while (não volta para o início)
-        // O correto é: brfalse sai do loop, brtrue volta para o início
-        // Como a semântica pede brfalse para voltar, vamos criar um rótulo de saída
-        String rotuloFim = novoRotulo();
         
-        // Se falso → sai do while
-        codigo = codigo.concat("brfalse " + rotuloFim + "\n");
-        
-        // Guarda rótulo de fim para ser resolvido depois
-        pilha_rotulos.push(rotuloFim);
-        
-        // Ao final do bloco do while, deve ter um "br" de volta ao início
-        // Isso será feito na gramática ou em outra ação
-        // Por enquanto, armazenamos o rótulo de início também
-        pilha_rotulos.push(rotulo);
+        // Se true → volta para inicio do while
+        codigo = codigo.concat("brtrue " + rotulo + "\n");
     }
 
     /// comando para carregar identificador em expressão
