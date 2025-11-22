@@ -1,0 +1,14 @@
+\\ Teste 10: Comparação de Strings \\
+begin
+    string s_1, s_2;
+    bool resultado;
+    
+    s_1 = "hello";
+    s_2 = "world";
+    
+    resultado = s_1 == s_2;
+    print(true, "s_1 == s_2: ", resultado);
+    
+    resultado = s_1 ~= s_2;
+    print(true, "s_1 ~= s_2: ", resultado);
+end

@@ -1,0 +1,6 @@
+\\ Teste 13: Atribuição de Tipos Incompatíveis (String para Int) \\
+begin
+    int numero;
+    
+    numero = "texto";
+end

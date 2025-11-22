@@ -1,0 +1,13 @@
+\\ Teste 26: Expressões Aninhadas \\
+begin
+    int a, b, c, resultado;
+    float resultadoFloat;
+    
+    a = 10;
+    b = 5;
+    c = 2;
+    
+    resultado = (a + b) * c;
+    resultadoFloat = resultado - (a / b);
+    print(true, "Resultado: ", resultado);
+end

@@ -1,0 +1,16 @@
+\\ Teste 31: WHILE Aninhado \\
+begin
+    int i;
+    int j;
+    
+    i = 0;
+    
+    do
+        j = 0;
+        do
+            print(true, "i: ", i, " j: ", j);
+            j = j + 1;
+        until j < 3;
+        i = i + 1;
+    until i < 3;
+end

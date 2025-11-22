@@ -1,0 +1,7 @@
+\\ Teste 12: Variável Não Inicializada \\
+begin
+    int x;
+    int y;
+    
+    y = x + 10;
+end

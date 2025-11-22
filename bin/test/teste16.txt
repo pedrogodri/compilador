@@ -1,0 +1,8 @@
+\\ Teste 16: Subtração com String \\
+begin
+    string texto;
+    int resultado;
+    
+    texto = "teste";
+    resultado = texto - 5;
+end

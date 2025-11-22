@@ -1,0 +1,6 @@
+\\ Teste 14: Atribuição de Tipos Incompatíveis (Bool para String) \\
+begin
+    string texto;
+    
+    texto = true;
+end

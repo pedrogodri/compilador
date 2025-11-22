@@ -1,0 +1,16 @@
+\\ Teste 9: Operações Lógicas \\
+begin
+    bool a, b, resultado;
+    
+    a = true;
+    b = false;
+    
+    resultado = a and b;
+    print(true, "a and b: ", resultado);
+    
+    resultado = a or b;
+    print(true, "a or b: ", resultado);
+    
+    resultado = not a;
+    print(true, "not a: ", resultado);
+end

@@ -1,0 +1,5 @@
+\\ Teste 11: Variável Não Declarada \\
+begin
+    x = 10;
+    print(false, x);
+end

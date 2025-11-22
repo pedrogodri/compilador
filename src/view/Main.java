@@ -406,11 +406,12 @@ public class Main extends JFrame {
     }
 
     /**
-     * Realiza a compilação da aba atual 
+     * Realiza a compilação da aba atual, gera o arquivo .il,
+     * compila para .exe usando ilasm e executa o programa
      */
     private void acaoCompilar() {
         EditorTab editor = getEditorAtual();
-
+        
         // Verifica se o arquivo já foi salvo
         if (editor.arquivoAtual == null) {
             mostrarMensagem("Erro: salve o arquivo antes de compilar");
@@ -423,39 +424,135 @@ public class Main extends JFrame {
         lexico.setInput(editor.textArea.getText());
         
         try {
-            // tradução dirigida pela sintaxe
+            // Tradução dirigida pela sintaxe
             sintatico.parse(lexico, semantico);
-
+            
             // Obtém o código IL gerado
             String codigoIL = semantico.getCodigo();
             
-            // Determina o nome do arquivo .il (mesmo nome do .txt, mas com extensão .il)
+            // Determina os caminhos dos arquivos
             String caminhoFonte = editor.arquivoAtual.getAbsolutePath();
-            String caminhoIL = caminhoFonte.substring(0, caminhoFonte.lastIndexOf('.')) + ".il";
-
-            // Gera o arquivo .il
+            String caminhoBase = caminhoFonte.substring(0, caminhoFonte.lastIndexOf('.'));
+            String caminhoIL = caminhoBase + ".il";
+            String caminhoExe = caminhoBase + ".exe";
+            
+            // 1. Gera o arquivo .il
             File arquivoIL = new File(caminhoIL);
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivoIL))) {
                 writer.write(codigoIL);
-                mostrarMensagem("Programa compilado com sucesso.\nArquivo gerado: " + arquivoIL.getName());
             } catch (IOException ex) {
                 mostrarMensagem("Erro ao gerar arquivo .il: " + ex.getMessage());
+                return;
             }
-        }
-        catch ( LexicalError e ) {
+            
+            // 3. Pergunta se quer criar o executavel e executar
+            int opcao = JOptionPane.showConfirmDialog(
+                this,
+                "Programa compilado com sucesso!\n\nDeseja criar o executavel e executar o programa?",
+                "Compilação Concluída",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE
+            );
+            
+            if (opcao == JOptionPane.YES_OPTION) {
+                boolean compilouExe = compilarILParaExe(caminhoIL, caminhoExe);
+
+                if (!compilouExe) {
+                    mostrarMensagem("Erro ao compilar para .exe.\nVerifique se o .NET Framework está instalado.");
+                } else {
+                    executarPrograma(caminhoExe);
+                    mostrarMensagem("Programa compilado com sucesso.");
+                }
+            } else {
+                mostrarMensagem("Programa compilado com sucesso.");
+            }
+            
+        } catch (LexicalError e) {
             if (e instanceof SimboloInvalidoError simError)
                 mostrarMensagem("linha " + simError.getPosition() + ": " + simError.getCaracter() + " " 
                 + simError.getMessage());
             else
                 mostrarMensagem("linha " + e.getPosition() + ": " + e.getMessage());
-        }
-        catch ( SyntaticError e ) {
+        } catch (SyntaticError e) {
             mostrarMensagem("linha " + e.getPosition() + ": "  +
                 e.getEncontrado().replaceAll("\"[^\"]*\"", "constante_string") + " " + e.getMessage()
             );
-        }
-        catch ( SemanticError e ) {
+        } catch (SemanticError e) {
             mostrarMensagem("linha " + e.getPosition() + ": "  + e.getMessage());
+        }
+    }
+
+    /**
+     * Compila um arquivo .il para .exe usando o ilasm
+     * @param caminhoIL Caminho do arquivo .il
+     * @param caminhoExe Caminho onde o .exe será gerado
+     * @return true se compilou com sucesso, false caso contrário
+     */
+    private boolean compilarILParaExe(String caminhoIL, String caminhoExe) {
+        try {
+            // Caminho do ilasm (pode variar dependendo da versão do .NET)
+            String[] possiveisCaminhos = {
+                "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\ilasm.exe",
+                "C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\ilasm.exe",
+                "C:\\Windows\\Microsoft.NET\\Framework64\\v2.0.50727\\ilasm.exe",
+                "C:\\Windows\\Microsoft.NET\\Framework\\v2.0.50727\\ilasm.exe"
+            };
+            
+            String caminhoIlasm = null;
+            for (String caminho : possiveisCaminhos) {
+                if (new File(caminho).exists()) {
+                    caminhoIlasm = caminho;
+                    break;
+                }
+            }
+            
+            if (caminhoIlasm == null) {
+                return false;
+            }
+            
+            // Executa o ilasm
+            ProcessBuilder pb = new ProcessBuilder(
+                caminhoIlasm,
+                "/quiet",           // Modo silencioso
+                "/output=" + caminhoExe,
+                caminhoIL
+            );
+            
+            pb.redirectErrorStream(true);
+            Process process = pb.start();
+            
+            // Aguarda a conclusão
+            int exitCode = process.waitFor();
+            
+            return exitCode == 0;
+            
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    /**
+     * Executa o programa compilado em uma nova janela de console
+     * @param caminhoExe Caminho do executável
+     */
+    private void executarPrograma(String caminhoExe) {
+        try {
+            // Executa em uma nova janela de console (cmd)
+            ProcessBuilder pb = new ProcessBuilder(
+                "cmd.exe",
+                "/c",
+                "start",
+                "cmd.exe",
+                "/k",
+                "\"" + caminhoExe + "\" && echo. && echo Pressione qualquer tecla para fechar... && pause > nul"
+            );
+            
+            pb.start();
+            
+            mostrarMensagem("Programa executado com sucesso!");
+            
+        } catch (IOException ex) {
+            mostrarMensagem("Erro ao executar o programa: " + ex.getMessage());
         }
     }
 

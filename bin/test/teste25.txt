@@ -1,0 +1,6 @@
+\\ Teste 25: Uso de Variável Não Declarada em Expressão \\
+begin
+    int resultado;
+    
+    resultado = x + y + z;
+end

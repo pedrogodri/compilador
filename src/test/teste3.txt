@@ -1,0 +1,11 @@
+\\ Teste 3: Operações com Float e Int (Conversão Implícita) \\
+begin
+    int x;
+    float y, resultado;
+    
+    x = 10;
+    y = 3.5;
+    
+    resultado = x + y;
+    print(true, "Resultado: ", resultado);
+end

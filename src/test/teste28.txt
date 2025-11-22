@@ -1,0 +1,11 @@
+\\ Teste 28: Expressões Lógicas Aninhadas \\
+begin
+    bool a, b, c, resultado;
+    
+    a = true;
+    b = false;
+    c = true;
+    
+    resultado = (a or b) and (c or not b);
+    print(true, "Resultado: ", resultado);
+end

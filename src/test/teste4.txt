@@ -1,0 +1,19 @@
+\\ Teste 4: Comandos de Entrada \\
+begin
+    int idade;
+    string nome;
+    float altura;
+    
+    print(false, "Digite seu nome: ");
+    read(nome);
+    
+    print(false, "Digite sua idade: ");
+    read(idade);
+    
+    print(false, "Digite sua altura: ");
+    read(altura);
+    
+    print(true, "Nome: ", nome);
+    print(true, "Idade: ", idade);
+    print(true, "Altura: ", altura);
+end

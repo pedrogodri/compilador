@@ -1,0 +1,17 @@
+\\ Teste 1: Declaração e Inicialização Básica \\
+begin
+    int x;
+    float y;
+    string nome;
+    bool flag;
+    
+    x = 10;
+    y = 3.14;
+    nome = "João";
+    flag = true;
+    
+    print(false, x);
+    print(false, y);
+    print(false, nome);
+    print(false, flag);
+end

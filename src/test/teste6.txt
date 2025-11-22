@@ -1,0 +1,10 @@
+\\ Teste 6: Estrutura IF Simples \\
+begin
+    bool flag;
+    
+    flag = true;
+    
+    if flag
+        print(true, "Flag é verdadeira");
+    end;
+end

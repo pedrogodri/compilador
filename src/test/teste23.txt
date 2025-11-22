@@ -1,0 +1,10 @@
+\\ Teste 23: Expressão Não-Bool em IF \\
+begin
+    int x;
+    
+    x = 10;
+    
+    if x
+        print(true, "ok");
+    end;
+end

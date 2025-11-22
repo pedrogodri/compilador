@@ -1,0 +1,8 @@
+\\ Teste 17: Multiplicação com String \\
+begin
+    string texto;
+    int resultado;
+    
+    texto = "abc";
+    resultado = texto * 3;
+end

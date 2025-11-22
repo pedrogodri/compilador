@@ -1,0 +1,6 @@
+\\ Teste 22: Leitura de Variável Bool \\
+begin
+    bool flag;
+    
+    read(flag);
+end

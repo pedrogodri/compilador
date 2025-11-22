@@ -1,0 +1,11 @@
+\\ Teste 7: Estrutura WHILE \\
+begin
+    int contador;
+    
+    contador = 0;
+    
+    do
+        print(true, "Contador: ", contador);
+        contador = contador + 1;
+    until contador < 5;
+end

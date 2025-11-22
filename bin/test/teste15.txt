@@ -1,0 +1,11 @@
+\\ Teste 15: Operação Aritmética com String \\
+begin
+    string nome;
+    int numero;
+    int resultado;
+    
+    nome = "João";
+    numero = 10;
+    
+    resultado = nome + numero;
+end

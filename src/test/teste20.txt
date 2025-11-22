@@ -1,0 +1,11 @@
+\\ Teste 20: Operador Relacional < com String \\
+begin
+    string a;
+    string b;
+    bool resultado;
+    
+    a = "abc";
+    b = "def";
+    
+    resultado = a < b;
+end

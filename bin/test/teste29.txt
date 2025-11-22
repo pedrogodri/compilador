@@ -1,0 +1,10 @@
+\\ Teste 29: NOT em Expressão \\
+begin
+    bool flag;
+    
+    flag = false;
+    
+    if not flag
+        print(true, "Flag é falsa");
+    end;
+end

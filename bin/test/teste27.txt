@@ -1,0 +1,13 @@
+\\ Teste 27: Negação de Números \\
+begin
+    int x, y;
+    float z;
+    
+    x = 10;
+    y = -x;
+    z = 1.1;
+    
+    print(true, "x: ", x);
+    print(true, "y: ", y);
+    print("z: ", z);
+end

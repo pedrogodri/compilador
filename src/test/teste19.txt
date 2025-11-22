@@ -1,0 +1,11 @@
+\\ Teste 19: Comparação de Tipos Incompatíveis \\
+begin
+    string nome;
+    int idade;
+    bool resultado;
+    
+    nome = "Maria";
+    idade = 25;
+    
+    resultado = nome == idade;
+end

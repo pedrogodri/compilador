@@ -1,0 +1,10 @@
+\\ Teste 24: Expressão Não-Bool em WHILE \\
+begin
+    int contador;
+    
+    contador = 0;
+    
+    do
+        contador = contador + 1;
+    until contador;
+end

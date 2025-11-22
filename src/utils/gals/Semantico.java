@@ -3,26 +3,50 @@ package utils.gals;
 import interfaces.ITipo;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 import utils.gals.exceptions.SemanticError;
 
 public class Semantico implements Constants
 {
+    // #region controle de expressões
+
+    /// Pilha de tipos que estão na memoria
     private Stack<String> pilha_tipos = new Stack<>();
+    /// Guarda o operador relacional atual
     private String operador_relacional;
+
+    // #endregion
+
+    /// Código objeto gerado
     private String codigo = "";
 
-    // controle de rotulos
+    // #region controle de rotulos
+
+    /// Pilha de rótulos para controle de desvios
     private Stack<String> pilha_rotulos = new Stack<>();
+    /// Contador para criação de novos rótulos
     private int contadorRotulos = 1;
 
-    // declaração de variavel
-    private String tipo_declarado;
-    private List<String> lista_identificadores = new ArrayList<>();
-    private Map<String, String> tabela_simbolos = new HashMap<>();
+    // #endregion
 
+    // #region declaração de variavel
+
+    /// Guarda o tipo da variavel que vai ser declarada
+    private String tipo_declarado;
+    /// Lista de identificadores que vão ser declarados
+    private List<String> lista_identificadores = new ArrayList<>();
+    /// Mapa de variaveis que foram declaradas e seu tipo
+    private Map<String, String> tabela_simbolos = new HashMap<>();
+    /// Controle de variáveis inicializadas
+    private Set<String> variaveis_inicializadas = new HashSet<>();
+
+    // #endregion
+
+    /// Cria um novo rótulo único, para utilizar no desvio de condições e laços
     private String novoRotulo() {
         return "L" + (contadorRotulos++);
     }
@@ -31,7 +55,7 @@ public class Semantico implements Constants
         return codigo;
     }
 
-    public void executeAction(int action, Token token)	throws SemanticError
+    public void executeAction(int action, Token token) throws SemanticError
     {
         switch (action) {
             case 100 -> acao100();
@@ -40,23 +64,23 @@ public class Semantico implements Constants
             case 103 -> acao103(token);
             case 104 -> acao104(token);
             case 105 -> acao105(token);
-            case 106 -> acao106();
-            case 107 -> acao107();
-            case 108 -> acao108();
-            case 109 -> acao109();
+            case 106 -> acao106(token);
+            case 107 -> acao107(token);
+            case 108 -> acao108(token);
+            case 109 -> acao109(token);
             case 110 -> acao110();
             case 111 -> acao111(token);
-            case 112 -> acao112();
-            case 113 -> acao113();
-            case 114 -> acao114();
+            case 112 -> acao112(token);
+            case 113 -> acao113(token);
+            case 114 -> acao114(token);
             case 115 -> acao115();
             case 116 -> acao116();
             case 117 -> acao117();
             case 118 -> acao118();
-            case 119 -> acao119();
+            case 119 -> acao119(token);
             case 120 -> acao120(token);
             case 121 -> acao121(token);
-            case 122 -> acao122();
+            case 122 -> acao122(token);
             case 123 -> acao123(token);
             case 124 -> acao124(token);
             case 125 -> acao125(token);
@@ -67,9 +91,7 @@ public class Semantico implements Constants
             case 130 -> acao130(token);
             default -> {}
         }
-
-        // System.out.println("Ação #"+action+", Token: "+token);
-    }	
+    }
 
     /// comando para iniciar projeto
     private void acao100() {
@@ -116,19 +138,26 @@ public class Semantico implements Constants
     private void acao105(Token token) {
         pilha_tipos.push(ITipo.STRING);
         String lexeme = token.getLexeme();
-        // Se o lexema já vem com aspas, remove-as
-        if (lexeme.startsWith("\"") && lexeme.endsWith("\"")) {
+
+        // Se já vem com aspas remove-as
+        if (lexeme.startsWith("\"") && lexeme.endsWith("\""))
             lexeme = lexeme.substring(1, lexeme.length() - 1);
-        }
+
         codigo = codigo.concat("ldstr \"" + lexeme + "\"\n");
     }
 
     /// comando para somar dois números
-    private void acao106() {
+    private void acao106(Token token) throws SemanticError {
         String t2 = pilha_tipos.pop();
         String t1 = pilha_tipos.pop();
 
-        if (t1.equals(ITipo.INT) && t2.equals(ITipo.INT))
+        if (t1.equals(ITipo.STRING) || t2.equals(ITipo.STRING)) {
+            throw new SemanticError(
+                "operação de soma inválida entre tipos",
+                token.getPosition()
+            );
+        }
+        else if (t1.equals(ITipo.INT) && t2.equals(ITipo.INT))
             pilha_tipos.push(ITipo.INT);
         else
             pilha_tipos.push(ITipo.FLOAT);
@@ -137,11 +166,17 @@ public class Semantico implements Constants
     }
 
     /// comando para subtrair dois números
-    private void acao107() {
+    private void acao107(Token token) throws SemanticError {
         String t2 = pilha_tipos.pop();
         String t1 = pilha_tipos.pop();
 
-        if (t1.equals(ITipo.INT) && t2.equals(ITipo.INT))
+        if (t1.equals(ITipo.STRING) || t2.equals(ITipo.STRING)) {
+            throw new SemanticError(
+                "operação de subtração inválida entre tipos",
+                token.getPosition()
+            );
+        }
+        else if (t1.equals(ITipo.INT) && t2.equals(ITipo.INT))
             pilha_tipos.push(ITipo.INT);
         else
             pilha_tipos.push(ITipo.FLOAT);
@@ -149,12 +184,17 @@ public class Semantico implements Constants
         codigo = codigo.concat("sub\n");
     }
 
-    
     /// comando para multiplicar dois números
-    private void acao108() {
+    private void acao108(Token token) throws SemanticError {
         String t2 = pilha_tipos.pop();
         String t1 = pilha_tipos.pop();
 
+        if (t1.equals(ITipo.STRING) || t2.equals(ITipo.STRING)) {
+            throw new SemanticError(
+                "operação de multiplicação inválida entre tipos",
+                token.getPosition()
+            );
+        }
         if (t1.equals(ITipo.INT) && t2.equals(ITipo.INT))
             pilha_tipos.push(ITipo.INT);
         else
@@ -164,9 +204,16 @@ public class Semantico implements Constants
     }
 
     /// comando para dividir dois números
-    private void acao109() {
-        pilha_tipos.pop();
-        pilha_tipos.pop();
+    private void acao109(Token token) throws SemanticError {
+        String t1 = pilha_tipos.pop();
+        String t2 = pilha_tipos.pop();
+
+        if (t1.equals(ITipo.STRING) || t2.equals(ITipo.STRING)) {
+            throw new SemanticError(
+                "operação de subtração inválida entre tipos",
+                token.getPosition()
+            );
+        }
 
         pilha_tipos.push(ITipo.FLOAT);
 
@@ -184,14 +231,20 @@ public class Semantico implements Constants
     }
 
     /// comando para operações relacionais
-    private void acao112() {
-        pilha_tipos.pop();
-        pilha_tipos.pop();
+    private void acao112(Token token) throws SemanticError {
+        String t1 = pilha_tipos.pop();
+        String t2 = pilha_tipos.pop();
+
+        if (t1.equals(ITipo.STRING) && !t2.equals(ITipo.STRING) || !t1.equals(ITipo.STRING) && t2.equals(ITipo.STRING)) {
+            throw new SemanticError(
+                "tipos incompatíveis em operação relacional",
+                token.getPosition()
+            );
+        }
 
         pilha_tipos.push(ITipo.BOOL);
 
         switch (operador_relacional) {
-
             case "==" -> codigo = codigo.concat("ceq\n");
 
             case "~=" -> {
@@ -209,9 +262,16 @@ public class Semantico implements Constants
     }
 
     /// comando para fazer "and"
-    private void acao113() {
-        pilha_tipos.pop();
-        pilha_tipos.pop();
+    private void acao113(Token token) throws SemanticError {
+        String t1 = pilha_tipos.pop();
+        String t2 = pilha_tipos.pop();
+
+        if (!t1.equals(ITipo.BOOL) || !t2.equals(ITipo.BOOL)) {
+            throw new SemanticError(
+                "tipos incompatíveis em operação lógica",
+                token.getPosition()
+            );
+        }
 
         pilha_tipos.push(ITipo.BOOL);
 
@@ -219,9 +279,16 @@ public class Semantico implements Constants
     }
 
     /// comando para fazer "or"
-    private void acao114() {
-        pilha_tipos.pop();
-        pilha_tipos.pop();
+    private void acao114(Token token) throws SemanticError {
+        String t1 = pilha_tipos.pop();
+        String t2 = pilha_tipos.pop();
+
+        if (!t1.equals(ITipo.BOOL) || !t2.equals(ITipo.BOOL)) {
+            throw new SemanticError(
+                "tipos incompatíveis em operação lógica",
+                token.getPosition()
+            );
+        }
 
         pilha_tipos.push(ITipo.BOOL);
 
@@ -253,10 +320,15 @@ public class Semantico implements Constants
     }
 
     /// comando para adicionar ao locals
-    private void acao119() {
+    private void acao119(Token token) throws SemanticError {
         for (String id : lista_identificadores) {
-
             // Insere na tabela de símbolos conforme tipo declarado
+            if (tabela_simbolos.containsKey(id)) {
+                throw new SemanticError(
+                    "variável \"" + id + "\" já foi declarada",
+                    token.getPosition()
+                );
+            }
             tabela_simbolos.put(id, tipo_declarado);
 
             // Gera o código objeto de declaração (.locals)
@@ -286,20 +358,37 @@ public class Semantico implements Constants
     }
 
     /// comando para atribuição
-    private void acao122() {
+    private void acao122(Token token) throws SemanticError {
+        // Recupera o id onde vai armazenar
+        String id = lista_identificadores.get(0);
+
+        // NOVO: Verifica se a variável foi declarada
+        if (!tabela_simbolos.containsKey(id)) {
+            throw new SemanticError(
+                "variável \"" + id + "\" não foi declarada",
+                token.getPosition()
+            );
+        }
         // Remove o tipo avaliado pela expressão
         String tipoExpressao = pilha_tipos.pop();
+
+        if (!tabela_simbolos.get(id).equals(tipoExpressao)) {
+            throw new SemanticError(
+                "atribuição inválida entre tipos",
+                token.getPosition()
+            );
+        }
 
         // Se expressao for int64 → converter antes de armazenar
         if (tipoExpressao.equals(ITipo.INT)) {
             codigo = codigo.concat("conv.i8\n");
         }
 
-        // Recupera o id onde vai armazenar
-        String id = lista_identificadores.get(0);
-
         // Gera código IL da atribuição
         codigo = codigo.concat("stloc " + id + "\n");
+
+        // NOVO: marca a variável como inicializada
+        variaveis_inicializadas.add(id);
 
         // Limpa lista
         lista_identificadores.clear();
@@ -311,6 +400,14 @@ public class Semantico implements Constants
 
         // Verifica tipo do id
         String tipoId = tabela_simbolos.get(id);
+
+        // NOVO: Verifica se a variável foi declarada
+        if (tipoId == null) {
+            throw new SemanticError(
+                "variável \"" + id + "\" não foi declarada",
+                token.getPosition()
+            );
+        }
 
         // Não pode ler bool
         if (tipoId.equals(ITipo.BOOL)) {
@@ -335,11 +432,13 @@ public class Semantico implements Constants
 
         // Armazena o valor lido
         codigo = codigo.concat("stloc " + id + "\n");
+
+        // NOVO: marca a variável como inicializada (pois recebeu um valor da entrada)
+        variaveis_inicializadas.add(id);
     }
 
     /// comando para escrever constante string
     private void acao124(Token token) {
-        // CORRIGIDO: remove aspas do lexema se necessário
         String lexeme = token.getLexeme();
         if (lexeme.startsWith("\"") && lexeme.endsWith("\"")) {
             lexeme = lexeme.substring(1, lexeme.length() - 1);
@@ -434,8 +533,24 @@ public class Semantico implements Constants
     }
 
     /// comando para carregar identificador em expressão
-    private void acao130(Token token) {
+    private void acao130(Token token) throws SemanticError {
         String id = token.getLexeme();
+
+        // NOVO: Verifica se a variável foi declarada
+        if (!tabela_simbolos.containsKey(id)) {
+            throw new SemanticError(
+                "variável \"" + id + "\" não foi declarada",
+                token.getPosition()
+            );
+        }
+
+        // NOVO: Verifica se a variável foi inicializada
+        if (!variaveis_inicializadas.contains(id)) {
+            throw new SemanticError(
+                "variável \"" + id + "\" não foi inicializada",
+                token.getPosition()
+            );
+        }
 
         // Recupera o tipo do identificador na tabela de símbolos
         String tipoId = tabela_simbolos.get(id);

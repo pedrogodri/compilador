@@ -1,0 +1,16 @@
+\\ Teste 30: IF-ELSE Aninhado \\
+begin
+    int x;
+    
+    x = 10;
+    
+    if x > 0
+        if x > 5
+            print("x eh maior que 5");
+        else
+            print("x esta entre 1 e 5");
+        end;
+    else
+        print("x eh zero ou negativo");
+    end;
+end

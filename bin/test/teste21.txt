@@ -1,0 +1,11 @@
+\\ Teste 21: Operação Lógica com Não-Bool \\
+begin
+    int x;
+    int y;
+    bool resultado;
+    
+    x = 5;
+    y = 10;
+    
+    resultado = x and y;
+end

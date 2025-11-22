@@ -1,0 +1,13 @@
+\\ Teste 32: Combinação IF e WHILE \\
+begin
+    int contador;
+    
+    contador = 0;
+    
+    do
+        if contador == 5
+            print(true, "Contador chegou em 5!");
+        end;
+        contador = contador + 1;
+    until contador < 10;
+end

@@ -1,0 +1,8 @@
+\\ Teste 18: Divisão com String \\
+begin
+    string texto;
+    int resultado;
+    
+    texto = "xyz";
+    resultado = texto / 2;
+end

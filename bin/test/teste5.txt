@@ -1,0 +1,12 @@
+\\ Teste 5: Estrutura IF-ELSE \\
+begin
+    int x;
+    
+    x = 10;
+    
+    if x > 5
+        print(true, "x é maior que 5");
+    else
+        print(true, "x é menor ou igual a 5");
+    end;
+end

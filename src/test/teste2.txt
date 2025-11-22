@@ -1,0 +1,20 @@
+\\ Teste 2: Operações Aritméticas \\
+begin
+    int a, b, resultadoInt;
+    float resultadoFloat; \\ necessario para guardar a divisão que resulta em float \\
+    
+    a = 10;
+    b = 5;
+    
+    resultadoInt = a + b;
+    print(true, "Soma: ", resultadoInt);
+    
+    resultadoInt = a - b;
+    print(true, "Subtração: ", resultadoInt);
+    
+    resultadoInt = a * b;
+    print(true, "Multiplicação: ", resultadoInt);
+    
+    resultadoFloat = a / b;
+    print(true, "Divisão: ", resultadoFloat);
+end
