@@ -220,7 +220,7 @@ public class Semantico implements Constants
         codigo = codigo.concat("div\n");
     }
 
-    /// comando para transformar número em negativo
+    /// comando para transformar número em negativo no topo da pilha
     private void acao110() {
         codigo = codigo.concat("neg\n");
     }
@@ -309,8 +309,8 @@ public class Semantico implements Constants
     
     /// comando para fazer "not"
     private void acao117() {
-        codigo = codigo.concat("ldc.i4.0\n");
-        codigo = codigo.concat("ceq\n");
+        codigo = codigo.concat("ldc.i4.1\n");
+        codigo = codigo.concat("xor\n");
     }
 
     /// comando para escrever quebra de linha na saída padrão
