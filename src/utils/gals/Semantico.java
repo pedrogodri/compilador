@@ -17,12 +17,12 @@ public class Semantico implements Constants
     /// Pilha de tipos que estão na memoria
     private Stack<String> pilha_tipos = new Stack<>();
     /// Guarda o operador relacional atual
-    private String operador_relacional;
+    private String operador_relacional = "";
 
     // #endregion
 
     /// Código objeto gerado
-    private String codigo = "";
+    private String codigo_objeto = "";
 
     // #region controle de rotulos
 
@@ -36,7 +36,7 @@ public class Semantico implements Constants
     // #region declaração de variavel
 
     /// Guarda o tipo da variavel que vai ser declarada
-    private String tipo_declarado;
+    private String tipo = "";
     /// Lista de identificadores que vão ser declarados
     private List<String> lista_identificadores = new ArrayList<>();
     /// Mapa de variaveis que foram declaradas e seu tipo
@@ -52,7 +52,7 @@ public class Semantico implements Constants
     }
 
     public String getCodigo() {
-        return codigo;
+        return codigo_objeto;
     }
 
     public void executeAction(int action, Token token) throws SemanticError
@@ -95,7 +95,7 @@ public class Semantico implements Constants
 
     /// comando para iniciar projeto
     private void acao100() {
-        codigo = codigo.concat(".assembly extern mscorlib {}\n" +
+        codigo_objeto = codigo_objeto.concat(".assembly extern mscorlib {}\n" +
                                 ".assembly _programa{}\n" +
                                 ".module _programa.exe\n" +
                                 "\n" +
@@ -106,7 +106,7 @@ public class Semantico implements Constants
 
     /// comando para finalizar projeto
     private void acao101() {
-        codigo = codigo.concat("\nret\n"+
+        codigo_objeto = codigo_objeto.concat("\nret\n"+
                                 "}\n" +
                                 "}\n");
     }
@@ -116,22 +116,22 @@ public class Semantico implements Constants
         String tipo = pilha_tipos.pop();
 
         if (tipo.equals(ITipo.INT))
-            codigo = codigo.concat("conv.i8\n");
+            codigo_objeto = codigo_objeto.concat("conv.i8\n");
 
-        codigo = codigo.concat("call void [mscorlib]System.Console::Write("+ tipo +")\n");
+        codigo_objeto = codigo_objeto.concat("call void [mscorlib]System.Console::Write("+ tipo +")\n");
     }
 
     /// comando para empilhar tipo int64
     private void acao103(Token token) {
         pilha_tipos.push(ITipo.INT);
-        codigo = codigo.concat("ldc.i8 " + token.getLexeme() + "\n");
-        codigo = codigo.concat("conv.r8\n");
+        codigo_objeto = codigo_objeto.concat("ldc.i8 " + token.getLexeme() + "\n");
+        codigo_objeto = codigo_objeto.concat("conv.r8\n");
     }
 
     /// comando para empilhar tipo float64
     private void acao104(Token token) {
         pilha_tipos.push(ITipo.FLOAT);
-        codigo = codigo.concat("ldc.r8 " + token.getLexeme() + "\n");
+        codigo_objeto = codigo_objeto.concat("ldc.r8 " + token.getLexeme() + "\n");
     }
 
     /// comando para empilhar tipo string
@@ -143,7 +143,7 @@ public class Semantico implements Constants
         if (lexeme.startsWith("\"") && lexeme.endsWith("\""))
             lexeme = lexeme.substring(1, lexeme.length() - 1);
 
-        codigo = codigo.concat("ldstr \"" + lexeme + "\"\n");
+        codigo_objeto = codigo_objeto.concat("ldstr \"" + lexeme + "\"\n");
     }
 
     /// comando para somar dois números
@@ -162,7 +162,7 @@ public class Semantico implements Constants
         else
             pilha_tipos.push(ITipo.FLOAT);
 
-        codigo = codigo.concat("add\n");
+        codigo_objeto = codigo_objeto.concat("add\n");
     }
 
     /// comando para subtrair dois números
@@ -181,7 +181,7 @@ public class Semantico implements Constants
         else
             pilha_tipos.push(ITipo.FLOAT);
 
-        codigo = codigo.concat("sub\n");
+        codigo_objeto = codigo_objeto.concat("sub\n");
     }
 
     /// comando para multiplicar dois números
@@ -200,7 +200,7 @@ public class Semantico implements Constants
         else
             pilha_tipos.push(ITipo.FLOAT);
 
-        codigo = codigo.concat("mul\n");
+        codigo_objeto = codigo_objeto.concat("mul\n");
     }
 
     /// comando para dividir dois números
@@ -217,12 +217,12 @@ public class Semantico implements Constants
 
         pilha_tipos.push(ITipo.FLOAT);
 
-        codigo = codigo.concat("div\n");
+        codigo_objeto = codigo_objeto.concat("div\n");
     }
 
     /// comando para transformar número em negativo no topo da pilha
     private void acao110() {
-        codigo = codigo.concat("neg\n");
+        codigo_objeto = codigo_objeto.concat("neg\n");
     }
 
     /// comando para guardar o operador relacional
@@ -245,17 +245,17 @@ public class Semantico implements Constants
         pilha_tipos.push(ITipo.BOOL);
 
         switch (operador_relacional) {
-            case "==" -> codigo = codigo.concat("ceq\n");
+            case "==" -> codigo_objeto = codigo_objeto.concat("ceq\n");
 
             case "~=" -> {
-                codigo = codigo.concat("ceq\n");
-                codigo = codigo.concat("ldc.i4.0\n");
-                codigo = codigo.concat("ceq\n");
+                codigo_objeto = codigo_objeto.concat("ceq\n");
+                codigo_objeto = codigo_objeto.concat("ldc.i4.0\n");
+                codigo_objeto = codigo_objeto.concat("ceq\n");
             }
 
-            case "<" -> codigo = codigo.concat("clt\n");
+            case "<" -> codigo_objeto = codigo_objeto.concat("clt\n");
 
-            case ">" -> codigo = codigo.concat("cgt\n");
+            case ">" -> codigo_objeto = codigo_objeto.concat("cgt\n");
 
             default -> {}
         }
@@ -275,7 +275,7 @@ public class Semantico implements Constants
 
         pilha_tipos.push(ITipo.BOOL);
 
-        codigo = codigo.concat("and\n");
+        codigo_objeto = codigo_objeto.concat("and\n");
     }
 
     /// comando para fazer "or"
@@ -292,31 +292,31 @@ public class Semantico implements Constants
 
         pilha_tipos.push(ITipo.BOOL);
 
-        codigo = codigo.concat("or\n");
+        codigo_objeto = codigo_objeto.concat("or\n");
     }
 
     /// comando para empilhar tipo booleano true
     private void acao115() {
         pilha_tipos.push(ITipo.BOOL);
-        codigo = codigo.concat("ldc.i4.1\n");
+        codigo_objeto = codigo_objeto.concat("ldc.i4.1\n");
     }
     
     /// comando para empilhar tipo booleano false
     private void acao116() {
         pilha_tipos.push(ITipo.BOOL);
-        codigo = codigo.concat("ldc.i4.0\n");
+        codigo_objeto = codigo_objeto.concat("ldc.i4.0\n");
     }
     
     /// comando para fazer "not"
     private void acao117() {
-        codigo = codigo.concat("ldc.i4.1\n");
-        codigo = codigo.concat("xor\n");
+        codigo_objeto = codigo_objeto.concat("ldc.i4.1\n");
+        codigo_objeto = codigo_objeto.concat("xor\n");
     }
 
     /// comando para escrever quebra de linha na saída padrão
     private void acao118() {
-        codigo = codigo.concat("ldstr \"\\n\"\n");
-        codigo = codigo.concat("call void [mscorlib]System.Console::Write(string)\n");
+        codigo_objeto = codigo_objeto.concat("ldstr \"\\n\"\n");
+        codigo_objeto = codigo_objeto.concat("call void [mscorlib]System.Console::Write(string)\n");
     }
 
     /// comando para adicionar ao locals
@@ -329,10 +329,10 @@ public class Semantico implements Constants
                     token.getPosition()
                 );
             }
-            tabela_simbolos.put(id, tipo_declarado);
+            tabela_simbolos.put(id, tipo);
 
             // Gera o código objeto de declaração (.locals)
-            codigo = codigo.concat(".locals (" + tipo_declarado + " " + id + ")\n");
+            codigo_objeto = codigo_objeto.concat(".locals (" + tipo + " " + id + ")\n");
         }
 
         // Limpa a lista de ids usados na declaração
@@ -344,10 +344,10 @@ public class Semantico implements Constants
         String tipoFonte = token.getLexeme();
 
         switch (tipoFonte) {
-            case "int" -> tipo_declarado = ITipo.INT;
-            case "float" -> tipo_declarado = ITipo.FLOAT;
-            case "string" -> tipo_declarado = ITipo.STRING;
-            case "bool" -> tipo_declarado = ITipo.BOOL;
+            case "int" -> tipo = ITipo.INT;
+            case "float" -> tipo = ITipo.FLOAT;
+            case "string" -> tipo = ITipo.STRING;
+            case "bool" -> tipo = ITipo.BOOL;
             default -> {}
         }
     }
@@ -381,11 +381,11 @@ public class Semantico implements Constants
 
         // Se expressao for int64 → converter antes de armazenar
         if (tipoExpressao.equals(ITipo.INT)) {
-            codigo = codigo.concat("conv.i8\n");
+            codigo_objeto = codigo_objeto.concat("conv.i8\n");
         }
 
         // Gera código IL da atribuição
-        codigo = codigo.concat("stloc " + id + "\n");
+        codigo_objeto = codigo_objeto.concat("stloc " + id + "\n");
 
         // NOVO: marca a variável como inicializada
         variaveis_inicializadas.add(id);
@@ -418,20 +418,20 @@ public class Semantico implements Constants
         }
 
         // Gera leitura básica: ReadLine()
-        codigo = codigo.concat("call string [mscorlib]System.Console::ReadLine()\n");
+        codigo_objeto = codigo_objeto.concat("call string [mscorlib]System.Console::ReadLine()\n");
 
         // Conversões conforme tipo
         switch (tipoId) {
             case ITipo.INT -> 
-                codigo = codigo.concat("call int64 [mscorlib]System.Int64::Parse(string)\n");
+                codigo_objeto = codigo_objeto.concat("call int64 [mscorlib]System.Int64::Parse(string)\n");
             case ITipo.FLOAT ->
-                codigo = codigo.concat("call float64 [mscorlib]System.Double::Parse(string)\n");
+                codigo_objeto = codigo_objeto.concat("call float64 [mscorlib]System.Double::Parse(string)\n");
             case ITipo.STRING -> { /* nada: ReadLine já retorna string */ }
             default -> {}
         }
 
         // Armazena o valor lido
-        codigo = codigo.concat("stloc " + id + "\n");
+        codigo_objeto = codigo_objeto.concat("stloc " + id + "\n");
 
         // NOVO: marca a variável como inicializada (pois recebeu um valor da entrada)
         variaveis_inicializadas.add(id);
@@ -445,10 +445,10 @@ public class Semantico implements Constants
         }
         
         // Carregar a constante string
-        codigo = codigo.concat("ldstr \"" + lexeme + "\"\n");
+        codigo_objeto = codigo_objeto.concat("ldstr \"" + lexeme + "\"\n");
 
         // Escrever no console
-        codigo = codigo.concat("call void [mscorlib]System.Console::Write(string)\n");
+        codigo_objeto = codigo_objeto.concat("call void [mscorlib]System.Console::Write(string)\n");
     }
 
     /// comando if - verificação de expressão
@@ -468,7 +468,7 @@ public class Semantico implements Constants
         String rotulo = novoRotulo();
 
         // 4. Gera código para desviar caso a expressão seja falsa
-        codigo = codigo.concat("brfalse " + rotulo + "\n");
+        codigo_objeto = codigo_objeto.concat("brfalse " + rotulo + "\n");
 
         // 5. Empilha o rótulo para uso posterior na ação #126 / #127
         pilha_rotulos.push(rotulo);
@@ -480,7 +480,7 @@ public class Semantico implements Constants
         String rotulo = pilha_rotulos.pop();
 
         // Rotula a próxima instrução
-        codigo = codigo.concat(rotulo + ":\n");
+        codigo_objeto = codigo_objeto.concat(rotulo + ":\n");
     }
 
     /// comando else - início do bloco
@@ -489,13 +489,13 @@ public class Semantico implements Constants
         String rotulo2 = novoRotulo();
 
         // Desvio incondicional para depois do if/else
-        codigo = codigo.concat("br " + rotulo2 + "\n");
+        codigo_objeto = codigo_objeto.concat("br " + rotulo2 + "\n");
 
         // Recupera o rótulo do false (criado na #125)
         String rotulo1 = pilha_rotulos.pop();
 
         // Marca o início da parte do ELSE
-        codigo = codigo.concat(rotulo1 + ":\n");
+        codigo_objeto = codigo_objeto.concat(rotulo1 + ":\n");
 
         // Empilha o rótulo2 para resolução posterior (#126)
         pilha_rotulos.push(rotulo2);
@@ -507,7 +507,7 @@ public class Semantico implements Constants
         String rotulo = novoRotulo();
 
         // Marca o início do laço
-        codigo = codigo.concat(rotulo + ":\n");
+        codigo_objeto = codigo_objeto.concat(rotulo + ":\n");
 
         // Empilha para uso posterior (#129)
         pilha_rotulos.push(rotulo);
@@ -529,7 +529,7 @@ public class Semantico implements Constants
         String rotulo = pilha_rotulos.pop();
         
         // Se true → volta para inicio do while
-        codigo = codigo.concat("brtrue " + rotulo + "\n");
+        codigo_objeto = codigo_objeto.concat("brtrue " + rotulo + "\n");
     }
 
     /// comando para carregar identificador em expressão
@@ -559,11 +559,11 @@ public class Semantico implements Constants
         pilha_tipos.push(tipoId);
 
         // Carrega o valor do identificador
-        codigo = codigo.concat("ldloc " + id + "\n");
+        codigo_objeto = codigo_objeto.concat("ldloc " + id + "\n");
 
         // Se o id for int64 → converter para float64
         if (tipoId.equals(ITipo.INT)) {
-            codigo = codigo.concat("conv.r8\n");
+            codigo_objeto = codigo_objeto.concat("conv.r8\n");
         }
     }
 }
