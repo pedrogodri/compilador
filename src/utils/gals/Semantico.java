@@ -321,17 +321,46 @@ public class Semantico implements Constants
 
     /// comando para adicionar ao locals
     private void acao119(Token token) throws SemanticError {
-        for (String id : lista_identificadores) {
-            // Insere na tabela de símbolos conforme tipo declarado
+        if (lista_identificadores.size() > 1) {
+            // Gera o código objeto de declaração (.locals) para múltiplas variáveis
+            StringBuilder declaracoes = new StringBuilder(".locals (");
+            
+            for (int i = 0; i < lista_identificadores.size(); i++) {
+                String id = lista_identificadores.get(i);
+
+                if (tabela_simbolos.containsKey(id)) {
+                    throw new SemanticError(
+                        "variável \"" + id + "\" já foi declarada",
+                        token.getPosition()
+                    );
+                }
+                
+                // Insere na tabela de símbolos conforme tipo declarado
+                tabela_simbolos.put(id, tipo);
+                
+                declaracoes.append(tipo).append(" ").append(id);
+                
+                if (i < lista_identificadores.size() - 1) {
+                    declaracoes.append(",");
+                }
+            }
+            
+            declaracoes.append(")\n");
+            codigo_objeto = codigo_objeto.concat(declaracoes.toString());
+        } else {
+            String id = lista_identificadores.get(0);
+
             if (tabela_simbolos.containsKey(id)) {
                 throw new SemanticError(
                     "variável \"" + id + "\" já foi declarada",
                     token.getPosition()
                 );
             }
+
+            // Insere na tabela de símbolos conforme tipo declarado
             tabela_simbolos.put(id, tipo);
 
-            // Gera o código objeto de declaração (.locals)
+            // Gera o código objeto de declaração (.locals) para uma variável
             codigo_objeto = codigo_objeto.concat(".locals (" + tipo + " " + id + ")\n");
         }
 
@@ -387,7 +416,7 @@ public class Semantico implements Constants
         // Gera código IL da atribuição
         codigo_objeto = codigo_objeto.concat("stloc " + id + "\n");
 
-        // NOVO: marca a variável como inicializada
+        // Marca a variável como inicializada
         variaveis_inicializadas.add(id);
 
         // Limpa lista
@@ -401,7 +430,7 @@ public class Semantico implements Constants
         // Verifica tipo do id
         String tipoId = tabela_simbolos.get(id);
 
-        // NOVO: Verifica se a variável foi declarada
+        // Verifica se a variável foi declarada
         if (tipoId == null) {
             throw new SemanticError(
                 "variável \"" + id + "\" não foi declarada",
@@ -426,14 +455,14 @@ public class Semantico implements Constants
                 codigo_objeto = codigo_objeto.concat("call int64 [mscorlib]System.Int64::Parse(string)\n");
             case ITipo.FLOAT ->
                 codigo_objeto = codigo_objeto.concat("call float64 [mscorlib]System.Double::Parse(string)\n");
-            case ITipo.STRING -> { /* nada: ReadLine já retorna string */ }
+            case ITipo.STRING -> { }
             default -> {}
         }
 
         // Armazena o valor lido
         codigo_objeto = codigo_objeto.concat("stloc " + id + "\n");
 
-        // NOVO: marca a variável como inicializada (pois recebeu um valor da entrada)
+        // Marca a variável como inicializada (pois recebeu um valor da entrada)
         variaveis_inicializadas.add(id);
     }
 
@@ -453,10 +482,10 @@ public class Semantico implements Constants
 
     /// comando if - verificação de expressão
     private void acao125(Token token) throws SemanticError {
-        // 1. Desempilha o tipo da expressão
+        // Desempilha o tipo da expressão
         String tipoExpressao = pilha_tipos.pop();
 
-        // 2. Verifica se a expressão é do tipo bool
+        // Verifica se a expressão é do tipo bool
         if (!tipoExpressao.equals(ITipo.BOOL)) {
             throw new SemanticError(
                 "expressão incompatível em comando de seleção",
@@ -464,13 +493,13 @@ public class Semantico implements Constants
             );
         }
 
-        // 3. Cria um novo rótulo
+        // Cria um novo rótulo
         String rotulo = novoRotulo();
 
-        // 4. Gera código para desviar caso a expressão seja falsa
+        // Gera código para desviar caso a expressão seja falsa
         codigo_objeto = codigo_objeto.concat("brfalse " + rotulo + "\n");
 
-        // 5. Empilha o rótulo para uso posterior na ação #126 / #127
+        // Empilha o rótulo para uso posterior na ação #126 / #127
         pilha_rotulos.push(rotulo);
     }
 
